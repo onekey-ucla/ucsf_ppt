@@ -1,0 +1,2284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>11:05-11:25 | Designing and Rethinking Program and Course Assessments in the Era of AI | Wonki Lee, PhD</title>
+<style>
+  :root {
+    --ink: #0f172a;
+    --ink-2: #334155;
+    --muted: #64748b;
+    --line: #e2e8f0;
+    --bg: #ffffff;
+    --bg-soft: #f8fafc;
+    --p1: #2774ae;   /* UCLA Blue */
+    --p2: #005587;   /* UCLA Dark Blue */
+    --p3: #b38a00;   /* Accessible UCLA Gold tone */
+    --p4: #8bb8e8;   /* UCLA Light Blue family */
+    --green: #16a34a;
+    --yellow: #eab308;
+    --red: #dc2626;
+    --accent: #005587;
+    --shadow: 0 12px 40px rgba(15, 23, 42, .08);
+    --fs-scale: 1;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--ink);
+    background: #eef2f7;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 1000;
+    background: #111827;
+    color: #ffffff;
+    padding: 10px 14px;
+    border-radius: 0 0 8px 0;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .skip-link:focus {
+    left: 0;
+    outline: 3px solid #2563eb;
+    outline-offset: 0;
+  }
+  body:not(.a11y-mode) .skip-link { display: none; }
+  .sr-only {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+  .deck {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .slide {
+    position: absolute;
+    width: min(1200px, 96vw);
+    aspect-ratio: 16 / 9;
+    max-height: 92vh;
+    background: var(--bg);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 56px 72px 64px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .slide.scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+  }
+  :fullscreen .slide,
+  :-webkit-full-screen .slide {
+    width: 1200px;
+    height: 675px;
+    max-height: none;
+    transform: scale(var(--fs-scale));
+    transform-origin: center center;
+  }
+  :fullscreen .slide.scrollable,
+  :-webkit-full-screen .slide.scrollable {
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
+  }
+  :fullscreen .slide .footer,
+  :-webkit-full-screen .slide .footer {
+    left: 72px;
+    right: 72px;
+    bottom: 18px;
+  }
+  .slide.active { display: flex; }
+  .slide h1 {
+    font-size: 44px; line-height: 1.1; margin: 0 0 8px;
+    letter-spacing: -0.02em; font-weight: 700;
+  }
+  .slide h2 {
+    font-size: 32px; line-height: 1.15; margin: 0 0 24px;
+    font-weight: 700; letter-spacing: -0.015em;
+  }
+  .slide h3 {
+    font-size: 19px; margin: 0 0 14px;
+    font-weight: 600; color: var(--ink-2); letter-spacing: -0.005em;
+  }
+  .slide p, .slide li { font-size: 18px; line-height: 1.55; color: var(--ink-2); }
+  .slide ul { padding-left: 20px; margin: 0 0 12px; }
+  .slide li { margin-bottom: 8px; }
+  .lede { font-size: 22px; color: var(--ink); line-height: 1.45; }
+  .eyebrow {
+    text-transform: uppercase; letter-spacing: 0.16em;
+    font-size: 12px; font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+  .footer {
+    position: absolute; bottom: 18px; left: 72px; right: 72px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 12px; color: var(--muted);
+  }
+  .footer .counter { font-variant-numeric: tabular-nums; }
+  .nav {
+    position: fixed; bottom: 18px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 8px; align-items: center;
+    background: rgba(15, 23, 42, .85); color: white;
+    padding: 8px 14px; border-radius: 999px;
+    font-size: 12px; z-index: 10;
+    backdrop-filter: blur(8px);
+  }
+  .nav button {
+    background: transparent; border: 0; color: white;
+    cursor: pointer; padding: 4px 10px; border-radius: 6px;
+    font-size: 13px;
+  }
+  .nav button:hover { background: rgba(255,255,255,.15); }
+  .nav .progress { font-variant-numeric: tabular-nums; opacity: .8; }
+  .toc-panel {
+    position: fixed;
+    inset: 0;
+    display: none;
+    z-index: 30;
+    pointer-events: none;
+  }
+  .toc-panel.open { display: block; pointer-events: auto; }
+  .toc-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(2, 6, 23, .45);
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .toc-panel.open .toc-backdrop { opacity: 1; }
+  .toc-card {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: min(430px, 92vw);
+    background: white;
+    box-shadow: -16px 0 40px rgba(15, 23, 42, .22);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(100%);
+    transition: transform .22s ease;
+  }
+  .toc-panel.open .toc-card { transform: translateX(0); }
+  .toc-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    background: var(--bg-soft);
+  }
+  .toc-head h3 {
+    margin: 0;
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .toc-close {
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: white;
+    color: var(--ink-2);
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .toc-list {
+    list-style: none;
+    margin: 0;
+    padding: 8px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .toc-list li { margin: 0; }
+  .toc-link {
+    width: 100%;
+    text-align: left;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 8px;
+    cursor: pointer;
+    color: var(--ink-2);
+    display: grid;
+    grid-template-columns: 142px 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+  .toc-link:hover {
+    background: #eff6ff;
+    border-color: rgba(39, 116, 174, .22);
+    color: var(--ink);
+  }
+  .toc-link.active {
+    background: rgba(39, 116, 174, .12);
+    border-color: rgba(39, 116, 174, .35);
+    color: var(--ink);
+  }
+  .toc-thumb {
+    width: 142px;
+  }
+  .toc-thumb-viewport {
+    width: 142px;
+    height: 80px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: #e2e8f0;
+  }
+  .toc-thumb-scale {
+    width: 1200px;
+    height: 675px;
+    transform: scale(0.1183);
+    transform-origin: top left;
+  }
+  .toc-thumb-slide {
+    position: relative;
+    width: 1200px;
+    height: 675px;
+    max-height: none;
+    aspect-ratio: 16 / 9;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 42px 52px 44px;
+    display: flex !important;
+    overflow: hidden;
+    pointer-events: none;
+  }
+  .toc-thumb-slide .footer { display: none !important; }
+  .toc-meta { min-width: 0; }
+  .toc-eyebrow {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+    line-height: 1.25;
+  }
+  .toc-title {
+    font-size: 13px;
+    line-height: 1.3;
+    color: var(--ink);
+    font-weight: 600;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  /* Title slide */
+  .title-slide {
+    background: linear-gradient(135deg, #005587 0%, #2774ae 100%);
+    color: white;
+    padding: 80px 88px;
+    justify-content: space-between;
+  }
+  .title-slide h1 { color: white; font-size: 54px; line-height: 1.05; max-width: 950px; }
+  .title-slide .meta { color: #cbd5e1; font-size: 18px; line-height: 1.6; }
+  .title-slide .stripe {
+    height: 8px; width: 160px; border-radius: 4px;
+    background: linear-gradient(90deg, var(--p1), var(--p2), var(--p3), var(--p4));
+    margin-bottom: 32px;
+  }
+  /* Pillar cards */
+  .pillar-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px;
+    margin-top: 18px;
+  }
+  .pillar-card {
+    background: var(--bg-soft);
+    border-radius: 14px; padding: 22px;
+    border-top: 6px solid var(--p1);
+    display: flex; flex-direction: column;
+  }
+  .pillar-card.p1 { border-top-color: var(--p1); }
+  .pillar-card.p2 { border-top-color: var(--p2); }
+  .pillar-card.p3 { border-top-color: var(--p3); }
+  .pillar-card.p4 { border-top-color: var(--p4); }
+  .pillar-card .num {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.1em;
+    color: var(--muted); text-transform: uppercase;
+  }
+  .pillar-card.p1 .num { color: var(--p1); }
+  .pillar-card.p2 .num { color: var(--p2); }
+  .pillar-card.p3 .num { color: var(--p3); }
+  .pillar-card.p4 .num { color: var(--p4); }
+  .pillar-card h3 { color: var(--ink); margin: 6px 0 10px; font-size: 18px; }
+  .pillar-card p { font-size: 14px; line-height: 1.5; margin: 0; }
+  /* Pillar inline tag */
+  .ptag {
+    display: inline-block; padding: 2px 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.05em;
+    text-transform: uppercase; color: white;
+    margin-right: 4px;
+  }
+  .ptag.p1 { background: var(--p1); }
+  .ptag.p2 { background: var(--p2); }
+  .ptag.p3 { background: var(--p3); }
+  .ptag.p4 { background: var(--p4); }
+  /* Two-column layouts */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 36px; }
+  .three-col { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  /* Compact tables */
+  table {
+    width: 100%; border-collapse: collapse; margin-top: 10px;
+    font-size: 14px;
+  }
+  table th, table td {
+    text-align: left; padding: 10px 12px;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  table th {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--muted); font-weight: 700;
+    border-bottom: 2px solid var(--line);
+  }
+  table td .ptag { font-size: 10px; }
+  .slide.gap-compare {
+    padding: 46px 50px 56px;
+  }
+  .slide.gap-compare h1 {
+    font-size: 38px;
+    margin-bottom: 14px;
+  }
+  .slide.gap-compare table {
+    margin-top: 6px;
+    font-size: 14px;
+  }
+  .slide.gap-compare th, .slide.gap-compare td {
+    padding: 10px 10px;
+    line-height: 1.45;
+  }
+  .slide.gap-compare th {
+    font-size: 11px;
+  }
+  .slide.gap-compare details {
+    margin-top: 6px;
+  }
+  .slide.gap-compare summary {
+    cursor: pointer;
+    color: var(--p1);
+    font-weight: 700;
+  }
+  .slide.gap-compare .sample-list {
+    margin: 6px 0 0 18px;
+    padding: 0;
+  }
+  .slide.gap-compare .sample-list li {
+    margin-bottom: 4px;
+    font-size: 13px;
+    line-height: 1.4;
+  }
+  /* Light callout box */
+  .callout {
+    background: var(--bg-soft);
+    border-left: 4px solid var(--p1);
+    padding: 14px 18px; border-radius: 8px;
+    font-size: 16px; color: var(--ink-2);
+  }
+  .callout.p2 { border-left-color: var(--p2); }
+  .callout.p3 { border-left-color: var(--p3); }
+  .callout.p4 { border-left-color: var(--p4); }
+  /* Traffic light chips */
+  .light {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-weight: 600; font-size: 13px;
+    padding: 3px 10px; border-radius: 999px;
+    background: #f1f5f9; color: var(--ink);
+  }
+  .light::before {
+    content: ""; width: 10px; height: 10px; border-radius: 50%;
+    display: inline-block;
+  }
+  .light.green::before { background: var(--green); box-shadow: 0 0 0 3px rgba(22,163,74,.18); }
+  .light.yellow::before { background: var(--yellow); box-shadow: 0 0 0 3px rgba(234,179,8,.2); }
+  .light.red::before { background: var(--red); box-shadow: 0 0 0 3px rgba(220,38,38,.18); }
+  /* Bigger traffic-light demo */
+  .lights-demo {
+    display: flex; gap: 18px; margin: 14px 0 6px;
+  }
+  .light-card {
+    flex: 1; padding: 16px 18px; border-radius: 12px;
+    border: 1px solid var(--line); background: var(--bg-soft);
+  }
+  .light-card .dot {
+    width: 18px; height: 18px; border-radius: 50%; margin-bottom: 10px;
+  }
+  .light-card.green .dot { background: var(--green); }
+  .light-card.yellow .dot { background: var(--yellow); }
+  .light-card.red .dot { background: var(--red); }
+  .light-card h4 { margin: 0 0 6px; font-size: 16px; }
+  .light-card p { margin: 0; font-size: 13px; line-height: 1.5; }
+  /* Key facts row */
+  .stat-row {
+    display: flex; gap: 32px; margin: 16px 0;
+  }
+  .stat { display: flex; flex-direction: column; }
+  .stat .k { font-size: 36px; font-weight: 800; color: var(--p1); line-height: 1; letter-spacing: -0.02em; }
+  .stat .l { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  /* Agenda */
+  .agenda-slide {
+    background: var(--bg);
+  }
+  .agenda-intro {
+    margin: 2px 0 6px;
+    font-size: 18px;
+    line-height: 1.4;
+    color: var(--ink-2);
+    max-width: 980px;
+  }
+  .agenda {
+    list-style: none;
+    margin: 14px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .agenda li {
+    display: grid;
+    grid-template-columns: 106px 1fr;
+    align-items: start;
+    gap: 12px;
+    min-height: 0;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: #ffffff;
+    box-shadow: none;
+  }
+  .agenda .t {
+    display: inline-block;
+    font-variant-numeric: tabular-nums;
+    color: var(--p1);
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: .04em;
+    text-transform: uppercase;
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+  .agenda .d {
+    margin-top: 0;
+    font-size: 18px;
+    line-height: 1.3;
+    color: var(--ink);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  .agenda .sub {
+    grid-column: 2 / 3;
+    margin-top: 3px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--muted);
+  }
+  .agenda .be-clarify {
+    border-color: rgba(39,116,174,.28);
+    background: #f8fbff;
+  }
+  /* Pillar-tinted section header bar */
+  .section-bar {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 6px 12px; border-radius: 999px;
+    background: rgba(39,116,174,.12); color: var(--p1);
+    font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  .section-bar.p1 { background: rgba(39,116,174,.12); color: var(--p1); }
+  .section-bar.p2 { background: rgba(0,85,135,.12); color: var(--p2); }
+  .section-bar.p3 { background: rgba(255,209,0,.25); color: var(--p3); }
+  .section-bar.p4 { background: rgba(139,184,232,.22); color: #245b92; }
+  /* Q22 quotes box */
+  .q-list {
+    background: var(--bg-soft); border-radius: 12px; padding: 18px 22px;
+    font-size: 14px; color: var(--ink-2); line-height: 1.55;
+  }
+  .q-list strong { color: var(--ink); display: block; margin-top: 8px; }
+  .q-list em { color: var(--muted); font-style: normal; }
+  .origin-scan .q-list { font-size: 16px; line-height: 1.5; padding: 20px 22px; }
+  .origin-scan .q-list p { margin: 0 0 10px; font-size: 18px; line-height: 1.45; }
+  .origin-scan .q-list strong { font-size: 17px; margin-top: 10px; }
+  .origin-scan .q-list em { font-size: 15px; }
+  .origin-scan .q-list details { margin-top: 8px; }
+  .origin-scan .q-list summary {
+    cursor: pointer;
+    font-weight: 700;
+    color: var(--p1);
+    list-style-position: outside;
+  }
+  .origin-scan .q-list .sample-list { margin: 8px 0 0 22px; padding: 0; }
+  .origin-scan .q-list .sample-list li { margin-bottom: 6px; font-size: 16px; line-height: 1.4; }
+  /* Mini list of pillar points */
+  .gap-row {
+    display: grid; grid-template-columns: 60px 1fr 1fr; gap: 14px;
+    padding: 10px 0; border-bottom: 1px solid var(--line);
+    font-size: 14px;
+  }
+  .gap-row:last-child { border-bottom: none; }
+  .gap-row .pillar-tag {
+    font-weight: 700; font-size: 11px; text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .gap-row.p1 .pillar-tag { color: var(--p1); }
+  .gap-row.p2 .pillar-tag { color: var(--p2); }
+  .gap-row.p3 .pillar-tag { color: var(--p3); }
+  .gap-row.p4 .pillar-tag { color: var(--p4); }
+  .gap-row .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 4px; display: block; }
+  /* Hypothesis slide */
+  .hypothesis {
+    border-radius: 14px; padding: 28px 32px; margin: 12px 0;
+  }
+  .hypothesis h3 { font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; }
+  .hypothesis .lever {
+    margin-top: 14px; padding-top: 14px;
+    border-top: 1px solid rgba(15,23,42,.1);
+    font-size: 15px; font-style: italic;
+  }
+  .hypothesis.p1 { background: rgba(39,116,174,.09); border-left: 6px solid var(--p1); }
+  .hypothesis.p1 h3 { color: var(--p1); }
+  .hypothesis.p2 { background: rgba(0,85,135,.09); border-left: 6px solid var(--p2); }
+  .hypothesis.p2 h3 { color: var(--p2); }
+  .hypothesis.p3 { background: rgba(255,209,0,.18); border-left: 6px solid var(--p3); }
+  .hypothesis.p3 h3 { color: var(--p3); }
+  .hypothesis.p4 { background: rgba(139,184,232,.2); border-left: 6px solid var(--p4); }
+  .hypothesis.p4 h3 { color: #245b92; }
+  .hypothesis p { font-size: 17px; color: var(--ink); margin: 0; line-height: 1.5; }
+  /* Course example overview cards */
+  .course-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+  }
+  .course-card {
+    background: var(--bg-soft); border-radius: 12px; padding: 18px;
+    border-top: 4px solid var(--p1);
+  }
+  .course-card.compu { border-top-color: var(--p1); }
+  .course-card.lab { border-top-color: var(--p2); }
+  .course-card.cap { border-top-color: var(--p3); }
+  .course-card.gen { border-top-color: var(--p4); }
+  .course-card h3 { color: var(--ink); margin-bottom: 6px; }
+  .course-card p { font-size: 14px; margin: 0; line-height: 1.5; }
+  /* Checklist style */
+  .checklist {
+    list-style: none; padding: 0; margin: 8px 0;
+  }
+  .checklist li {
+    padding: 12px 14px; margin-bottom: 8px;
+    background: var(--bg-soft); border-radius: 10px;
+    border-left: 4px solid var(--p1);
+    font-size: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .checklist li::before {
+    content: "□"; font-size: 22px; color: var(--p1); font-weight: 700;
+  }
+  .color-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .color-dot.red { background: var(--red); }
+  .color-dot.yellow { background: var(--yellow); }
+  .color-dot.green { background: var(--green); }
+  .ai-detail {
+    margin: 0;
+  }
+  .ai-detail summary {
+    cursor: pointer;
+    list-style: none;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+  .ai-detail summary::-webkit-details-marker { display: none; }
+  .ai-detail summary::after {
+    content: "  (details)";
+    color: var(--muted);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .ai-detail .ai-body {
+    margin-top: 7px;
+    padding-top: 7px;
+    border-top: 1px dashed var(--line);
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+  .ai-detail .ai-body p {
+    margin: 0 0 6px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+  .ai-detail .ai-body p:last-child { margin-bottom: 0; }
+  .checklist-dropdown {
+    list-style: none;
+    padding: 0;
+    margin: 8px 0;
+  }
+  .checklist-dropdown details {
+    margin-bottom: 9px;
+    background: linear-gradient(180deg, #ffffff 0%, var(--bg-soft) 100%);
+    border: 1px solid var(--line);
+    border-left: 6px solid var(--p1);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, .05);
+  }
+  .checklist-dropdown details.q1 { border-left-color: var(--p1); }
+  .checklist-dropdown details.q2 { border-left-color: var(--p4); }
+  .checklist-dropdown details.q3 { border-left-color: var(--p2); }
+  .checklist-dropdown details.q4 { border-left-color: var(--p4); }
+  .checklist-dropdown details.q5 { border-left-color: var(--p3); }
+  .checklist-dropdown summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 13px 14px;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .checklist-dropdown summary::-webkit-details-marker { display: none; }
+  .checklist-dropdown summary::before {
+    content: "□";
+    font-size: 20px;
+    color: var(--p1);
+    font-weight: 700;
+    line-height: 1;
+  }
+  .checklist-dropdown summary::after {
+    content: "▾";
+    margin-left: auto;
+    color: var(--muted);
+    transform: rotate(-90deg);
+    transition: transform .15s ease;
+  }
+  .checklist-dropdown details[open] summary::after { transform: rotate(0deg); }
+  .check-answer {
+    border-top: 1px solid var(--line);
+    background: #ffffff;
+    padding: 11px 14px 13px;
+    font-size: 15px;
+    color: var(--ink-2);
+    line-height: 1.4;
+  }
+  .check-answer p {
+    margin: 0 0 8px;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+  /* Two uses visual slide */
+  .use-framework .lede {
+    font-size: 20px;
+    line-height: 1.4;
+    margin-bottom: 18px;
+  }
+  .use-grid {
+    display: grid;
+    grid-template-columns: 1fr 70px 1fr;
+    gap: 14px;
+    align-items: stretch;
+    margin-top: 6px;
+  }
+  .use-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-top: 6px solid var(--p1);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, .05);
+  }
+  .use-card.course { border-top-color: var(--p3); }
+  .use-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+  .use-step {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    color: white;
+    background: var(--p1);
+    flex: 0 0 auto;
+  }
+  .use-card.course .use-step { background: var(--p3); color: #1f2937; }
+  .use-card h3 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 22px;
+    line-height: 1.2;
+  }
+  .use-tag {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .use-points {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .use-points li {
+    margin-bottom: 6px;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+  .use-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--p2);
+  }
+  .use-bridge {
+    margin-top: 14px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border-left: 6px solid var(--p2);
+    background: rgba(0, 85, 135, .08);
+    font-size: 16px;
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  .flow-grid {
+    display: grid;
+    grid-template-columns: 1fr 56px 1fr 56px 1fr;
+    gap: 12px;
+    align-items: stretch;
+    margin-top: 14px;
+  }
+  .flow-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-top: 6px solid var(--p1);
+    border-radius: 12px;
+    padding: 15px 16px;
+  }
+  .flow-card.step2 { border-top-color: var(--p2); }
+  .flow-card.step3 { border-top-color: var(--p3); }
+  .flow-card .kicker {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .flow-card h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .flow-card ul {
+    margin: 0;
+    padding-left: 16px;
+  }
+  .flow-card li {
+    font-size: 15px;
+    line-height: 1.4;
+    margin-bottom: 6px;
+    color: var(--ink-2);
+  }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--p2);
+  }
+  .example-strip {
+    margin-top: 22px;
+    border-left: 6px solid var(--p2);
+    background: rgba(0, 85, 135, .08);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 16px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .decision-map .lede {
+    font-size: 19px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .decision-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  .decision-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-top: 6px solid var(--p1);
+    border-radius: 12px;
+    padding: 12px 14px;
+  }
+  .decision-card.p1 { border-top-color: var(--p1); }
+  .decision-card.p2 { border-top-color: var(--p2); }
+  .decision-card.p3 { border-top-color: var(--p3); }
+  .decision-card.p4 { border-top-color: var(--p4); }
+  .decision-card h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .decision-card p {
+    margin: 0 0 6px;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+  .decision-card p:last-child { margin-bottom: 0; }
+  .slide.pillar-bullets .gap-row {
+    grid-template-columns: 80px 1fr 1fr;
+    gap: 16px;
+    padding: 12px 0;
+    align-items: start;
+  }
+  .slide.pillar-bullets .gap-drop {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--bg-soft);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .slide.pillar-bullets .gap-drop summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 12px 14px;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .slide.pillar-bullets .gap-drop summary::-webkit-details-marker { display: none; }
+  .slide.pillar-bullets .gap-drop summary::after {
+    content: "▾";
+    margin-left: auto;
+    color: var(--muted);
+    transform: rotate(-90deg);
+    transition: transform .15s ease;
+  }
+  .slide.pillar-bullets .gap-drop[open] summary::after { transform: rotate(0deg); }
+  .slide.pillar-bullets .gap-drop[open] {
+    max-height: 330px;
+    overflow-y: auto;
+  }
+  .slide.pillar-bullets .gap-drop[open] summary {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--bg-soft);
+    border-bottom: 1px solid var(--line);
+  }
+  .slide.pillar-bullets .gap-explain {
+    margin: 0 12px 0;
+    padding: 0 0 8px;
+    border-top: 1px solid var(--line);
+    padding-top: 10px;
+    font-size: 14px;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .slide.pillar-bullets .gap-drop .gap-row {
+    margin: 0 12px 10px;
+    padding-top: 10px;
+  }
+  .slide.pillar-bullets .gap-row ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .slide.pillar-bullets .gap-row li {
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+  .slide.pillar-bullets .gap-row .label {
+    margin-bottom: 6px;
+  }
+  .ifthen-slide .lede {
+    font-size: 20px;
+    line-height: 1.4;
+    margin-bottom: 16px;
+  }
+  .ifthen-grid {
+    display: grid;
+    grid-template-columns: 1fr 56px 1fr;
+    gap: 12px;
+    align-items: stretch;
+    margin-top: 10px;
+  }
+  .if-card, .then-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 16px 18px;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, .05);
+  }
+  .if-card { border-top: 6px solid var(--p4); }
+  .then-card { border-top: 6px solid var(--p1); }
+  .ifthen-head {
+    margin: 0 0 10px;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 700;
+  }
+  .if-card h3, .then-card h3 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .if-card ul, .then-card ul {
+    margin: 0;
+    padding-left: 18px;
+  }
+  .if-card li, .then-card li {
+    font-size: 16px;
+    line-height: 1.4;
+    margin-bottom: 7px;
+    color: var(--ink-2);
+  }
+  .ifthen-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--p2);
+  }
+  .term-note {
+    margin-top: 14px;
+    padding: 11px 13px;
+    border-radius: 10px;
+    border-left: 6px solid var(--p2);
+    background: rgba(0, 85, 135, .08);
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.4;
+  }
+  .bd-grid {
+    display: grid;
+    grid-template-columns: 1fr 56px 1fr 56px 1fr;
+    gap: 10px;
+    margin-top: 14px;
+    align-items: stretch;
+  }
+  .bd-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-top: 6px solid var(--p1);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .bd-card h3 {
+    margin: 0 0 8px;
+    font-size: 19px;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+  .bd-card p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.4;
+    color: var(--ink-2);
+  }
+  .bd-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 800;
+    color: var(--p2);
+  }
+  .bloom-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 14px;
+    align-items: start;
+  }
+  .bloom-ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .bloom-drop {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  .bloom-drop summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 10px 12px;
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+  }
+  .bloom-drop summary::-webkit-details-marker { display: none; }
+  .bloom-drop summary::after {
+    content: "▾";
+    margin-left: auto;
+    color: var(--muted);
+    transform: rotate(-90deg);
+    transition: transform .15s ease;
+  }
+  .bloom-drop[open] summary::after { transform: rotate(0deg); }
+  .bloom-drop .bloom-body {
+    border-top: 1px solid rgba(15,23,42,.12);
+    background: #ffffff;
+    padding: 8px 11px 10px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+  .bloom-drop.l1 summary { background: rgba(139,184,232,.20); }
+  .bloom-drop.l2 summary { background: rgba(139,184,232,.28); }
+  .bloom-drop.l3 summary { background: rgba(39,116,174,.16); }
+  .bloom-drop.l4 summary { background: rgba(39,116,174,.24); }
+  .bloom-drop.l5 summary { background: rgba(0,85,135,.18); }
+  .bloom-drop.l6 summary { background: rgba(0,85,135,.28); color: #0b2239; }
+  .bloom-note {
+    background: var(--bg-soft);
+    border-left: 6px solid var(--p3);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--ink-2);
+  }
+  .traffic-slide .lede {
+    font-size: 20px;
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .traffic-slide .lights-demo {
+    margin-top: 10px;
+  }
+  .traffic-slide .light-card h4 {
+    font-size: 18px;
+  }
+  .traffic-slide .light-card p {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+  .evidence-slide .three-col {
+    gap: 16px;
+    margin-top: 8px;
+  }
+  .evidence-slide .callout {
+    border-left: 1px solid var(--line);
+    border-top: 6px solid var(--p1);
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, .05);
+    padding: 14px 16px;
+  }
+  .evidence-slide .callout.ev-yellow {
+    border-top-color: var(--yellow);
+    background: rgba(234,179,8,.08);
+  }
+  .evidence-slide .callout.ev-red {
+    border-top-color: var(--red);
+    background: rgba(220,38,38,.06);
+  }
+  .evidence-slide .callout.ev-green {
+    border-top-color: var(--green);
+    background: rgba(22,163,74,.08);
+  }
+  .evidence-slide .callout h3 {
+    margin-top: 10px;
+    color: var(--ink);
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  .evidence-slide .callout p {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .evidence-slide .light { margin-bottom: 2px; }
+  .scenario-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .scenario-slide {
+    padding: 46px 52px 60px;
+  }
+  .scenario-slide h1 {
+    font-size: 40px;
+  }
+  .scenario-slide .lede {
+    font-size: 21px;
+    line-height: 1.4;
+  }
+  .scenario-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-top: 6px solid var(--p2);
+    border-radius: 12px;
+    padding: 16px 18px;
+    min-height: 370px;
+  }
+  .scenario-card.p2 { border-top-color: var(--p2); }
+  .scenario-card.p3 { border-top-color: var(--p3); }
+  .scenario-card.p4 { border-top-color: var(--p4); }
+  .scenario-card h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    color: var(--ink);
+    line-height: 1.25;
+  }
+  .scenario-card .label {
+    display: block;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .scenario-card .label:nth-of-type(2) {
+    margin-top: 14px;
+    padding-top: 10px;
+    border-top: 1px solid var(--line);
+  }
+  .scenario-card ul {
+    margin: 0 0 10px;
+    padding-left: 16px;
+  }
+  .scenario-card ul:last-child { margin-bottom: 0; }
+  .scenario-card li {
+    margin-bottom: 5px;
+    font-size: 15px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+  /* Closing slide */
+  .closing-slide { background: linear-gradient(135deg, #005587 0%, #2774ae 100%); color: white; }
+  .closing-slide h1 { color: white; }
+  .closing-slide p { color: #cbd5e1; }
+  /* Accessible linear reading mode (enabled by ?accessible=1) */
+  body.a11y-mode {
+    background: #ffffff;
+    overflow: auto;
+    color: #0f172a;
+  }
+  body.a11y-mode .deck {
+    position: static;
+    display: block;
+    padding: 14px 0 28px;
+  }
+  body.a11y-mode .slide {
+    position: relative;
+    display: block !important;
+    width: min(1100px, 96vw);
+    max-height: none;
+    aspect-ratio: auto;
+    height: auto;
+    margin: 0 auto 16px;
+    overflow: visible;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .08);
+    padding: 34px 40px 30px;
+  }
+  body.a11y-mode a {
+    color: #0f3ea8;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  body.a11y-mode :is(a, button, summary):focus-visible {
+    outline: 3px solid #1d4ed8;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  body.a11y-mode .eyebrow,
+  body.a11y-mode .label,
+  body.a11y-mode .section-bar {
+    color: #334155 !important;
+  }
+  body.a11y-mode .ptag {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+    border: 1px solid #94a3b8;
+  }
+  body.a11y-mode .light {
+    border: 1px solid #94a3b8;
+    background: #f8fafc;
+    color: #0f172a;
+  }
+  body.a11y-mode table th,
+  body.a11y-mode table td {
+    border-color: #94a3b8;
+  }
+  body.a11y-mode table th {
+    background: #e2e8f0;
+    color: #0f172a;
+  }
+  body.a11y-mode .slide.scrollable {
+    overflow: visible;
+    scrollbar-gutter: auto;
+  }
+  body.a11y-mode .slide h1 { font-size: 38px; }
+  body.a11y-mode .slide h2 { font-size: 30px; }
+  body.a11y-mode .slide p,
+  body.a11y-mode .slide li { font-size: 18px; line-height: 1.6; }
+  body.a11y-mode .footer {
+    position: static;
+    margin-top: 16px;
+    left: auto;
+    right: auto;
+    bottom: auto;
+  }
+  body.a11y-mode .nav,
+  body.a11y-mode .toc-panel { display: none !important; }
+  /* Print / PDF: each slide on its own page */
+  @media print {
+    body { background: white; overflow: visible; }
+    .nav { display: none; }
+    .deck { position: static; display: block; }
+    .slide {
+      display: flex !important;
+      position: relative; page-break-after: always;
+      box-shadow: none; border-radius: 0;
+      width: 100%; max-height: none; aspect-ratio: auto; height: 100vh;
+    }
+  }
+  /* Small screens: scale down typography */
+  @media (max-width: 900px) {
+    .slide { padding: 36px 32px 56px; }
+    .slide h1 { font-size: 32px; }
+    .slide h2 { font-size: 24px; }
+    .slide p, .slide li { font-size: 16px; }
+    .pillar-grid, .three-col, .course-grid { grid-template-columns: 1fr 1fr; }
+    .two-col { grid-template-columns: 1fr; gap: 16px; }
+    .agenda { gap: 8px; }
+    .agenda li { grid-template-columns: 92px 1fr; padding: 10px 12px; }
+    .agenda .t { font-size: 13px; }
+    .agenda .d { font-size: 16px; }
+    .agenda .sub { font-size: 13px; }
+    .agenda-intro { font-size: 17px; }
+    .slide.pillar-bullets .gap-drop[open] { max-height: 270px; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#deck">Skip to presentation content</a>
+<div class="deck" id="deck" role="main" aria-label="Presentation slides" tabindex="-1">
+
+<!-- 1. TITLE -->
+<section class="slide title-slide active">
+  <div>
+    <div class="stripe"></div>
+    <div class="eyebrow" style="color:#94a3b8;">11:05-11:25 · UCSF · Department of Epidemiology and Biostatistics · May 12, 2026</div>
+    <h1>Designing and Rethinking Program and Course Assessments in the Era of AI</h1>
+  </div>
+  <div class="meta">
+    <strong style="color:white;">Wonki Lee, PhD</strong><br/>
+    UCLA Teaching and Learning Center
+  </div>
+</section>
+
+<!-- 2. AGENDA -->
+<section class="slide agenda-slide">
+  <div class="eyebrow">Today's talk</div>
+  <h1>From a campus survey to a course policy</h1>
+  <p class="agenda-intro">A six-part roadmap from institutional signal to course-level action.</p>
+  <ul class="agenda">
+    <li><span class="t">Part 1</span><span class="d">The four pillars that frame our work</span></li>
+    <li class="be-clarify">
+      <span class="t">Part 2</span>
+      <span class="d">Origin: from the UCLA-wide GenAI module to a BE-elaborated bank</span>
+      <span class="sub">BE elaboration = we keep the same pillar structure but add bioengineering-specific context and items.</span>
+    </li>
+    <li><span class="t">Part 3</span><span class="d">How we designed the bank against the pillars</span></li>
+    <li><span class="t">Part 4</span><span class="d">From survey findings to course-level decisions</span></li>
+    <li><span class="t">Part 5</span><span class="d">Course-level redesign and syllabus policy</span></li>
+    <li><span class="t">Part 6</span><span class="d">Implications for UCSF Epi/Biostats</span></li>
+  </ul>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 3. FOUR PILLARS OVERVIEW -->
+<section class="slide">
+  <div class="eyebrow">Section 1 · Framework</div>
+  <h1>Four pillars of AI policy at UCLA</h1>
+  <p class="lede" style="margin-bottom:20px;">Each pillar reflects a distinct value the institution must protect as AI enters education and research. They organize both the <strong>survey design</strong> and the resulting <strong>course policy</strong>.</p>
+  <div class="pillar-grid">
+    <div class="pillar-card p1">
+      <div class="num">Pillar 1</div>
+      <h3>Awareness &amp; Literacy</h3>
+      <p>Users understand what AI tools are, how they work, where they fail, and how to verify outputs. Without literacy, every other pillar collapses.</p>
+    </div>
+    <div class="pillar-card p2">
+      <div class="num">Pillar 2</div>
+      <h3>Equitable Access</h3>
+      <p>Capability cannot depend on ability to pay, prior coding background, or which lab a student joins. Policy must close gaps, not widen them.</p>
+    </div>
+    <div class="pillar-card p3">
+      <div class="num">Pillar 3</div>
+      <h3>Innovation</h3>
+      <p>AI is a real accelerator for teaching and discovery. Policy must enable experimentation rather than reflexively restrict.</p>
+    </div>
+    <div class="pillar-card p4">
+      <div class="num">Pillar 4</div>
+      <h3>Research</h3>
+      <p>Reproducibility, data handling, IP, human-subjects safeguards, and authorship must hold up under AI use.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 4. ORIGIN — the UCLA-wide module -->
+<section class="slide origin-scan">
+  <div class="eyebrow">Section 1.5 · Origin</div>
+  <h1>We did not start from scratch.</h1>
+  <div style="margin-top:8px;">
+    <h3>UCLA Senior Survey GenAI module (Q22–Q25)</h3>
+    <div class="q-list">
+      <p><strong>This senior survey provides an important overview of general GenAI usage, but falls short of bioengineering-specific context and usage.</strong></p>
+      <strong>Q22 · Frequency of use</strong>
+      <ul class="sample-list">
+        <li>How often have you used GenAI tools to assist your learning this year?</li>
+      </ul>
+      <strong>Q23 · Purpose of use (examples)</strong>
+      <ul class="sample-list">
+        <li>To brainstorm for a writing project or presentation</li>
+        <li>To generate programming code</li>
+        <li>To study for exams</li>
+      </ul>
+      <strong>Q24 · Perception and policy clarity (examples)</strong>
+      <ul class="sample-list">
+        <li>My professors have discussed when it is appropriate to use AI.</li>
+        <li>I understand when it is appropriate to use AI.</li>
+        <li>GenAI can be trusted to be factually accurate.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 5. GAP MAP -->
+<section class="slide pillar-bullets scrollable">
+  <div class="eyebrow">Section 1.5 · Origin</div>
+  <h1>BE elaboration by pillar</h1>
+  <details class="gap-drop p1" open>
+    <summary><span class="ptag p1">P1</span> Awareness &amp; Literacy</summary>
+    <p class="gap-explain"><strong>Why this section:</strong> We move beyond general AI familiarity to discipline-specific judgment in bioengineering tasks. This section separates basic use, verification behavior, and perceived deskilling risk so instruction can target each one directly.</p>
+    <div class="gap-row p1">
+      <div class="pillar-tag">P1</div>
+      <div>
+        <span class="label">Sections (bullet points)</span>
+        <ul>
+          <li><strong>Section A:</strong> Literacy by task. We ask whether students can interpret AI output quality and limits across data analysis, bioinformatics, imaging, and molecular modeling tasks.</li>
+          <li><strong>Section I:</strong> Calibrated verification. This captures concrete checking behaviors (cross-checking sources, sanity checks, replication) rather than general trust attitudes.</li>
+          <li><strong>Section K:</strong> Student-perceived deskilling risk. We assess whether frequent AI use is reducing confidence or independent performance on core BE analytic tasks.</li>
+        </ul>
+      </div>
+      <div>
+        <span class="label">Example questions (with section mapping)</span>
+        <ul>
+          <li><strong>A:</strong> I can evaluate whether an AI-generated bioinformatics result is biologically plausible.</li>
+          <li><strong>I:</strong> I verify AI output with an independent source before using it in coursework.</li>
+          <li><strong>K:</strong> Frequent AI use may weaken my ability to perform core analysis tasks independently.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+  <details class="gap-drop p2">
+    <summary><span class="ptag p2">P2</span> Equitable Access</summary>
+    <p class="gap-explain"><strong>Why this section:</strong> Equity gaps can hide behind overall adoption rates. We split access into computing, cost, preparation, and safe-use guidance so interventions can be matched to the actual barrier.</p>
+    <div class="gap-row p2">
+      <div class="pillar-tag">P2</div>
+      <div>
+        <span class="label">Sections (bullet points)</span>
+        <ul>
+          <li><strong>Section F1:</strong> Computational resources. Access to devices, stable internet, and sufficient compute for AI-enabled coursework.</li>
+          <li><strong>Section F2:</strong> Financial resources. Whether paid subscriptions, API credits, or premium features create unequal participation.</li>
+          <li><strong>Section F3:</strong> Prior coding/ML experience as disadvantage. Whether students without prior technical background are structurally behind.</li>
+          <li><strong>Section F4:</strong> Guidance on safe data use. Clarity on what data can be entered into external tools, and what is restricted.</li>
+        </ul>
+      </div>
+      <div>
+        <span class="label">Example questions (with section mapping)</span>
+        <ul>
+          <li><strong>F1:</strong> I have access to sufficient computing resources for AI-enabled coursework.</li>
+          <li><strong>F2:</strong> Cost of paid AI tools creates a disadvantage for students in my program.</li>
+          <li><strong>F4:</strong> I receive clear guidance on safe and appropriate data use with AI tools.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+  <details class="gap-drop p3">
+    <summary><span class="ptag p3">P3</span> Innovation</summary>
+    <p class="gap-explain"><strong>Why this section:</strong> Innovation is not just tool usage frequency. This section checks whether AI is improving conceptual learning and workflows, or merely substituting for core student reasoning.</p>
+    <div class="gap-row p3">
+      <div class="pillar-tag">P3</div>
+      <div>
+        <span class="label">Sections (bullet points)</span>
+        <ul>
+          <li><strong>Section B:</strong> BE-specific tool use. Which domain tools students actually use and for which workflow stages.</li>
+          <li><strong>Section D:</strong> Learning impact in BE contexts. Whether AI improves conceptual understanding, not just task speed.</li>
+          <li><strong>Section E:</strong> BE-specific training needs. Where students need structured support, exemplars, or guided practice.</li>
+          <li><strong>Section H:</strong> Augmentation vs. substitution. Whether AI supports student reasoning or replaces core cognitive work.</li>
+        </ul>
+      </div>
+      <div>
+        <span class="label">Example questions (with section mapping)</span>
+        <ul>
+          <li><strong>B:</strong> Which BE-specific AI tools have you used (e.g., AlphaFold, image analysis tools, coding assistants)?</li>
+          <li><strong>D:</strong> AI tools have improved my understanding of core concepts in bioengineering courses.</li>
+          <li><strong>H:</strong> I use AI primarily to augment my workflow rather than replace my own reasoning.</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+  <details class="gap-drop p4">
+    <summary><span class="ptag p4">P4</span> Research</summary>
+    <p class="gap-explain"><strong>Why this section:</strong> Research integrity requires operational boundaries, not abstract warnings. These items translate data/IP constraints and reproducibility expectations into concrete, documentable practices.</p>
+    <div class="gap-row p4">
+      <div class="pillar-tag">P4</div>
+      <div>
+        <span class="label">Sections (bullet points)</span>
+        <ul>
+          <li><strong>Section C4:</strong> Sensitive data and IP boundaries. Rules for unpublished data, human-subjects data, proprietary content, and external uploads.</li>
+          <li><strong>Section J:</strong> Reproducibility and documentation. Required records of prompts, model/version, outputs, and verification steps.</li>
+          <li><strong>Section B (research rows):</strong> Research-grade tool use. How students apply AI tools in lab workflows while maintaining methodological rigor.</li>
+        </ul>
+      </div>
+      <div>
+        <span class="label">Example questions (with section mapping)</span>
+        <ul>
+          <li><strong>C4:</strong> Is uploading unpublished or human-subjects data to external AI tools permitted, disclosed-only, or prohibited?</li>
+          <li><strong>J:</strong> I document prompts, model/version, and verification steps when AI is used in research tasks.</li>
+          <li><strong>B (research rows):</strong> Which research-grade AI tools are you using for lab analysis or modeling?</li>
+        </ul>
+      </div>
+    </div>
+  </details>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 6. OTHER HYPOTHESIZED SIGNALS -->
+<section class="slide scenario-slide scrollable">
+  <div class="eyebrow">Pre-results planning</div>
+  <h1>Other hypothesized signals and possible responses</h1>
+  <p class="lede">Before results are released, we pre-specify additional "if-then" pathways so findings translate into guided use: better support, clearer workflows, and targeted guardrails.</p>
+  <div class="scenario-grid">
+    <div class="scenario-card p2">
+      <h3><span class="ptag p2">Pillar 2</span> Access gap signal</h3>
+      <span class="label">If we observe</span>
+      <ul>
+        <li>Students report disadvantages tied to cost or prior coding/ML background.</li>
+        <li>Resource inequities cluster by course type.</li>
+      </ul>
+      <span class="label">Guided responses</span>
+      <ul>
+        <li>No paid tools required for graded tasks.</li>
+        <li>Baseline onboarding + prompt/workflow exemplars for underprepared students.</li>
+        <li>Rubrics score outcomes, not tool access.</li>
+      </ul>
+    </div>
+    <div class="scenario-card p3">
+      <h3><span class="ptag p3">Pillar 3</span> Over-reliance signal</h3>
+      <span class="label">If we observe</span>
+      <ul>
+        <li>Students report gains in speed, but low confidence without AI support.</li>
+        <li>High dependence for core reasoning tasks.</li>
+      </ul>
+      <span class="label">Guided responses</span>
+      <ul>
+        <li>Use a staged workflow: independent attempt, AI-assisted revision, then justification.</li>
+        <li>Require paired submission (baseline draft + AI-improved version) to show learning gain.</li>
+        <li>Use decision logs with feedback to coach augmentation over substitution.</li>
+      </ul>
+    </div>
+    <div class="scenario-card p4">
+      <h3><span class="ptag p4">Pillar 4</span> Research-risk signal</h3>
+      <span class="label">If we observe</span>
+      <ul>
+        <li>Frequent uncertainty on data/IP boundaries.</li>
+        <li>Reproducibility concerns increase in AI-supported projects.</li>
+      </ul>
+      <span class="label">Guided responses</span>
+      <ul>
+        <li>Publish an approved workflow map: what tools are allowed for each data type.</li>
+        <li>Require AI-use appendix (prompts, model/version, verification) with worked examples.</li>
+        <li>Embed reproducibility checklist in grading criteria and TA feedback.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 15. THROUGHLINE -->
+<section class="slide ifthen-slide">
+  <div class="eyebrow">Throughline hypothesis (pre-results)</div>
+  <h1>If policy guidance is unclear, what do we do first?</h1>
+  <p class="lede">One pre-results decision rule: if uncertainty is mainly about what is allowed, intervene with clearer task-level communication before adding stricter restrictions.</p>
+  <div class="ifthen-grid">
+    <div class="if-card">
+      <p class="ifthen-head">If we observe</p>
+      <h3>Unclear policy signal</h3>
+      <ul>
+        <li>Students rate policy clarity as only moderate.</li>
+        <li>"Unsure" responses are frequent for high-risk activities (data, IP, human-subjects).</li>
+        <li>Confusion is about boundaries of use, not only attitudes toward AI.</li>
+      </ul>
+    </div>
+    <div class="ifthen-arrow" aria-hidden="true">→</div>
+    <div class="then-card">
+      <p class="ifthen-head">Then we do</p>
+      <h3>Communication-first interventions</h3>
+      <ul>
+        <li>Label assignments with Green / Yellow / Red usage rules.</li>
+        <li>Require disclosure statements on Yellow tasks.</li>
+        <li>Add explicit data-handling language to syllabus and rubrics.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="term-note">
+    <strong>Important:</strong> this is one possible signal pathway. Other survey signals (equity gaps, over-reliance, reproducibility concerns) would trigger different interventions.
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 16. BACKWARD DESIGN -->
+<section class="slide">
+  <div class="eyebrow">Section 4 · Course-level redesign</div>
+  <h1>Backward design</h1>
+  <p class="lede">Begin with intended performance, not assignment format. Then align evidence and learning activities in that order.</p>
+  <div class="bd-grid">
+    <div class="bd-card">
+      <h3>1) Outcomes first</h3>
+      <p>What should students be able to do by the end of the course?</p>
+    </div>
+    <div class="bd-arrow" aria-hidden="true">→</div>
+    <div class="bd-card">
+      <h3>2) Evidence next</h3>
+      <p>What evidence would convince us they can actually do it?</p>
+    </div>
+    <div class="bd-arrow" aria-hidden="true">→</div>
+    <div class="bd-card">
+      <h3>3) Learning design</h3>
+      <p>What learning experiences prepare students to produce that evidence?</p>
+    </div>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 16B. BLOOM TAXONOMY -->
+<section class="slide">
+  <div class="eyebrow">Section 4 · Course-level redesign</div>
+  <h1>Bloom taxonomy</h1>
+  <p class="lede">Bloom helps faculty calibrate cognitive demand so assessment tasks target the level of thinking we care about.</p>
+  <div class="bloom-wrap">
+    <div class="bloom-ladder">
+      <details class="bloom-drop l1">
+        <summary>Remember</summary>
+        <div class="bloom-body">Recall facts, definitions, and procedures. Useful for baseline knowledge checks.</div>
+      </details>
+      <details class="bloom-drop l2">
+        <summary>Understand</summary>
+        <div class="bloom-body">Explain concepts in your own words and interpret meaning.</div>
+      </details>
+      <details class="bloom-drop l3">
+        <summary>Apply</summary>
+        <div class="bloom-body">Use methods in a new problem context (e.g., apply a model to real data).</div>
+      </details>
+      <details class="bloom-drop l4">
+        <summary>Analyze</summary>
+        <div class="bloom-body">Break down decisions, compare alternatives, and identify errors or assumptions.</div>
+      </details>
+      <details class="bloom-drop l5">
+        <summary>Evaluate</summary>
+        <div class="bloom-body">Judge quality with criteria, defend choices, and critique evidence.</div>
+      </details>
+      <details class="bloom-drop l6">
+        <summary>Create</summary>
+        <div class="bloom-body">Design or produce original work that integrates methods, evidence, and justification.</div>
+      </details>
+    </div>
+    <div class="bloom-note">
+      <strong>Why it matters in the AI era:</strong> AI can often generate passable outputs at lower levels (Remember/Understand). More reliable evidence of student learning usually comes from tasks that require <strong>Apply, Analyze, Evaluate, and Create</strong> in context.
+      <br/><br/>
+      <strong>Practical use:</strong> map each major assessment to a Bloom verb before finalizing the syllabus.
+    </div>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 16C. TRAFFIC LIGHT POLICY -->
+<section class="slide traffic-slide">
+  <div class="eyebrow">Section 4 · Course-level redesign</div>
+  <h1>Traffic light policy</h1>
+  <p class="lede">Use a clear AI-use posture per task so students know exactly what is allowed.</p>
+  <div class="lights-demo">
+    <div class="light-card green">
+      <div class="dot"></div>
+      <h4>Green · Permitted</h4>
+      <p>Brainstorming, studying, exploration, debugging your own code, generating practice problems. No disclosure required.</p>
+    </div>
+    <div class="light-card yellow">
+      <div class="dot"></div>
+      <h4>Yellow · Permitted with disclosure</h4>
+      <p>Drafting prose, writing boilerplate code, generating figures, summarizing readings. AI-use statement is mandatory.</p>
+    </div>
+    <div class="light-card red">
+      <div class="dot"></div>
+      <h4>Red · Prohibited</h4>
+      <p>Oral defenses, in-class quizzes, bench interviews, pre-registered analysis plans, reflective memos. Evidences your own reasoning.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 17. EXAMPLE 1 — COMPUTATIONAL -->
+<section class="slide">
+  <div class="section-bar p1">Example 1 · Computational / Data-Science BE</div>
+  <h1>"Machine Learning for Biomedical Data"</h1>
+  <table>
+    <thead><tr><th style="width:30%;">Original</th><th>AI-era redesign</th><th style="width:14%;">Light</th><th style="width:12%;">Pillars</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Weekly auto-graded coding problem sets</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Coding lab + 150-word "decision log"</strong> — student names where they used AI, what they kept/rejected, and why</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> captures reasoning quality, not just whether code runs.</p>
+              <p><strong>Implementation focus:</strong> require students to justify accept/reject decisions on AI suggestions.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light yellow">Yellow</span></td>
+        <td><span class="ptag p1">1</span><span class="ptag p3">3</span></td>
+      </tr>
+      <tr>
+        <td>Closed-book final exam</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>15-min oral defense</strong> on a held-out dataset the student has never seen</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> tests live reasoning under probing questions, not recall.</p>
+              <p><strong>Implementation focus:</strong> student must explain choices, limitations, and next steps in real time.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light red">Red</span></td>
+        <td><span class="ptag p1">1</span></td>
+      </tr>
+      <tr>
+        <td>Course project — written report</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Two-stage:</strong> pre-registered analysis plan + final report with reproducibility appendix and "what surprised me" memo</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> separates planning from downstream drafting and enforces traceability.</p>
+              <p><strong>Implementation focus:</strong> lock plan before full analysis, then require prompts/model/version/seed documentation.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td><span class="ptag p4">4</span><span class="ptag p1">1</span></td>
+      </tr>
+      <tr>
+        <td>In-class quizzes</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Peer code review</strong> against a rubric (data leakage, label imbalance, validation strategy)</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> moves from recall to analytical critique of modeling decisions.</p>
+              <p><strong>Implementation focus:</strong> use a shared rubric so students evaluate quality consistently.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light green">Green</span></td>
+        <td><span class="ptag p3">3</span><span class="ptag p1">1</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="margin-top:14px; font-size:14px; color:var(--muted);">The decision log and reproducibility appendix mirror items J1–J3 — course-level data feeds program-level evaluation on Pillar 4.</p>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 18. EXAMPLE 2 — WET-LAB -->
+<section class="slide">
+  <div class="section-bar p2">Example 2 · Wet-Lab / Experimental BE</div>
+  <h1>"Biomolecular Engineering Laboratory"</h1>
+  <table>
+    <thead><tr><th style="width:30%;">Original</th><th>AI-era redesign</th><th style="width:14%;">Light</th><th style="width:12%;">Pillars</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Weekly lab reports (full IMRaD)</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Structured lab notebook + 5-min bench interview</strong> — TA asks the student to walk through their data and one troubleshooting decision</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> anchors grading in observed reasoning about actual experimental work.</p>
+              <p><strong>Implementation focus:</strong> short live interview scored with a standard troubleshooting rubric.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td><span class="ptag p1">1</span><span class="ptag p2">2</span></td>
+      </tr>
+      <tr>
+        <td>Pre-lab quiz</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Predict-and-justify task</strong> — predict the result <em>and</em> one likely failure mode with mechanism</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> emphasizes mechanism-based thinking instead of lookup recall.</p>
+              <p><strong>Implementation focus:</strong> require both expected outcome and plausible failure explanation.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light green">Green</span></td>
+        <td><span class="ptag p1">1</span><span class="ptag p3">3</span></td>
+      </tr>
+      <tr>
+        <td>Final report</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Data-to-decision memo (2 pp.) + raw data + annotated images</strong> — the deliverable is the interpretation</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> rewards interpretation and next-step reasoning, not polished prose alone.</p>
+              <p><strong>Implementation focus:</strong> grade recommendation quality with direct links to raw evidence.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td><span class="ptag p4">4</span><span class="ptag p1">1</span></td>
+      </tr>
+      <tr>
+        <td>Safety quiz</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Hazard scenario role-play</strong> — verbal hazard ID and mitigation</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> tests applied safety judgment in context.</p>
+              <p><strong>Implementation focus:</strong> students must name hazards and justify concrete mitigation steps.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light red">Red</span></td>
+        <td><span class="ptag p1">1</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="margin-top:14px; font-size:14px; color:var(--muted);"><strong>Equity note (Pillar 2):</strong> reduces grading weight on written polish — flagged by F1–F3 as an equity concern for students with weaker writing or English-language fluency.</p>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 19. EXAMPLE 3 — CAPSTONE -->
+<section class="slide">
+  <div class="section-bar p3">Example 3 · Capstone / Design</div>
+  <h1>"Senior Design in Bioengineering"</h1>
+  <table>
+    <thead><tr><th style="width:30%;">Original</th><th>AI-era redesign</th><th style="width:14%;">Light</th><th style="width:12%;">Pillars</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Written design proposal</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Stakeholder pitch + Q&amp;A</strong> with a real clinician/industry mentor; written proposal becomes a supporting artifact</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> centers live defense of design decisions under authentic questioning.</p>
+              <p><strong>Implementation focus:</strong> grade argument quality, constraint handling, and response to feedback.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td><span class="ptag p3">3</span><span class="ptag p1">1</span></td>
+      </tr>
+      <tr>
+        <td>Mid-term progress report</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Working prototype demo + design-decision log</strong> with chronological alternatives</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> requires tangible progress plus documented design reasoning.</p>
+              <p><strong>Implementation focus:</strong> include rejected alternatives and why the team pivoted.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light green">Green</span> + <span class="light yellow">Yellow</span></td>
+        <td><span class="ptag p3">3</span><span class="ptag p1">1</span></td>
+      </tr>
+      <tr>
+        <td>Final report (40+ pages)</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>15-pg report + 30-min panel defense + AI-use appendix</strong> documenting tools, prompts, human contribution per section</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> reduces AI ghostwriting risk and increases accountability for authorship.</p>
+              <p><strong>Implementation focus:</strong> appendix records tool use and human contribution for each section.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td><span class="ptag p4">4</span><span class="ptag p1">1</span></td>
+      </tr>
+      <tr>
+        <td>Peer evaluation</td>
+        <td>
+          <details class="ai-detail">
+            <summary><strong>Peer-contribution audit</strong> — each teammate documents specific commits, designs, or analyses they personally led</summary>
+            <div class="ai-body">
+              <p><strong>Why this redesign:</strong> makes individual contribution evidence-based instead of performative.</p>
+              <p><strong>Implementation focus:</strong> require artifact links (commits, files, prototypes) for each claim.</p>
+            </div>
+          </details>
+        </td>
+        <td><span class="light green">Green</span></td>
+        <td><span class="ptag p3">3</span></td>
+      </tr>
+    </tbody>
+  </table>
+  <p style="margin-top:14px; font-size:14px; color:var(--muted);"><strong>Policy connection (Pillar 4):</strong> capstone projects often involve external IP, patient data, or industry partners — the data-handling clause applies directly.</p>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 20. EXAMPLE 4 — GENERIC TEMPLATE -->
+<section class="slide evidence-slide">
+  <div class="section-bar p4">Example 4 · Generic / Adaptable Template</div>
+  <h1>Three layered evidence types</h1>
+  <p class="lede" style="margin-bottom:18px;">For any course, replace the originals with a triangulation that an AI alone cannot fabricate — because performance evidence requires the embodied student in the room.</p>
+  <div class="three-col">
+    <div class="callout ev-yellow">
+      <span class="light yellow">Yellow</span>
+      <h3>Process evidence</h3>
+      <p>Drafts, notebooks, version-controlled commits, decision logs. Discloses AI use; values revision over polish.</p>
+      <p style="margin-top:8px;"><span class="ptag p1">1</span><span class="ptag p3">3</span></p>
+    </div>
+    <div class="callout ev-red">
+      <span class="light red">Red</span>
+      <h3>Performance evidence</h3>
+      <p>Oral defense, bench interview, code-walk, design pitch with Q&amp;A. The student's reasoning under questioning <em>is</em> the assessment.</p>
+      <p style="margin-top:8px;"><span class="ptag p1">1</span></p>
+    </div>
+    <div class="callout ev-green">
+      <span class="light green">Green</span>
+      <h3>Reflection evidence</h3>
+      <p>Structured reflections that ask the student to evaluate their own work, AI choices, and limitations. Often AI-permitted because the reflection itself is the cognitive task.</p>
+      <p style="margin-top:8px;"><span class="ptag p1">1</span><span class="ptag p3">3</span></p>
+    </div>
+  </div>
+  <p style="margin-top:14px; font-size:14px; color:var(--muted);"><strong>Bloom mapping:</strong> process touches Apply / Analyze · performance reaches Evaluate · reflection reaches Evaluate / Create.</p>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 21. FACULTY CHECKLIST -->
+<section class="slide">
+  <div class="eyebrow">Section 4 · Faculty checklist</div>
+  <h1>Five questions before the syllabus goes live</h1>
+  <div class="checklist-dropdown">
+    <details class="q1">
+      <summary>Have I named at least one <strong>Red</strong><span class="color-dot red"></span> assessment per learning outcome?</summary>
+      <div class="check-answer">
+        <p><strong>Suggested answer:</strong> Define at least one no-AI performance task for each core outcome (e.g., oral defense, in-class explanation, or live problem-solving).</p>
+        <span class="ptag p1">Pillar 1</span>
+      </div>
+    </details>
+    <details class="q2">
+      <summary>Is every <strong>Yellow</strong><span class="color-dot yellow"></span> assessment paired with a disclosure mechanism (prompts, model, contribution)?</summary>
+      <div class="check-answer">
+        <p><strong>Suggested answer:</strong> Require a short AI-use statement listing tool/version, representative prompts, and what the student accepted/rejected.</p>
+        <span class="ptag p1">Pillar 1</span><span class="ptag p4">Pillar 4</span>
+      </div>
+    </details>
+    <details class="q3">
+      <summary>Does my <strong>Green</strong><span class="color-dot green"></span> category protect equity (no student is penalized for using or not using AI)?</summary>
+      <div class="check-answer">
+        <p><strong>Suggested answer:</strong> Keep Green tasks optional and grade the quality of the work product, not whether a student used AI tools.</p>
+        <span class="ptag p2">Pillar 2</span>
+      </div>
+    </details>
+    <details class="q4">
+      <summary>Does my data-handling clause cover unpublished data, human-subjects data, and partner IP?</summary>
+      <div class="check-answer">
+        <p><strong>Suggested answer:</strong> Explicitly state no external upload of sensitive or restricted materials, and include where approved alternatives are available.</p>
+        <span class="ptag p4">Pillar 4</span>
+      </div>
+    </details>
+    <details class="q5">
+      <summary>Have I aligned each assessment to a <strong>Bloom verb</strong> in the syllabus?</summary>
+      <div class="check-answer">
+        <p><strong>Suggested answer:</strong> Map each assessment to a target verb (Apply/Analyze/Evaluate/Create) so the task format matches the intended cognition.</p>
+        <span class="ptag p3">Pillar 3</span>
+      </div>
+    </details>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 22. POLICY BY PILLAR -->
+<section class="slide">
+  <div class="eyebrow">Section 5 · Course AI policy</div>
+  <h1>Drop-in syllabus language, organized by pillar</h1>
+  <div class="pillar-grid">
+    <div class="pillar-card p1">
+      <div class="num">Pillar 1 · Awareness &amp; Literacy</div>
+      <h3>The traffic light + disclosure</h3>
+      <p>Every graded task is labeled Green, Yellow, or Red. Yellow tasks require an "AI-use statement" — tool, version, prompts, what was kept vs. rejected. AI is not an author.</p>
+    </div>
+    <div class="pillar-card p2">
+      <div class="num">Pillar 2 · Equitable Access</div>
+      <h3>No paid tools required</h3>
+      <p>Free-tier or UC-licensed tools suffice for every Yellow task. Students who choose not to use AI on Yellow tasks are not penalized — the rubric grades the deliverable, not the toolchain.</p>
+    </div>
+    <div class="pillar-card p3">
+      <div class="num">Pillar 3 · Innovation</div>
+      <h3>Use AI ambitiously on Green</h3>
+      <p>Green list is illustrative, not exhaustive. Policy is a <em>living document</em>; updates with one week's notice and a written change summary, informed by mid-quarter feedback.</p>
+    </div>
+    <div class="pillar-card p4">
+      <div class="num">Pillar 4 · Research</div>
+      <h3>Explicit data-handling clause</h3>
+      <p>No external upload of unpublished data, human-subjects data, partner IP, or NDA/IRB material. Reproducibility documentation is a required deliverable on all research artifacts.</p>
+    </div>
+  </div>
+  <div class="callout" style="margin-top:18px;"><strong>Why this layout:</strong> the audience can read the survey-to-policy logic directly off the syllabus. Each clause exists because a survey item said it had to.</div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 23. UCSF IMPLICATIONS -->
+<section class="slide">
+  <div class="eyebrow">Closing</div>
+  <h1>For UCSF Epi/Biostats</h1>
+  <p class="lede">The model is not "scrap your existing surveys and adopt ours." It is: use your campus-wide instrument as the trunk, grow a department-specific elaboration on the same architecture, organize both around the four pillars.</p>
+  <div class="three-col" style="margin-top:18px;">
+    <div class="callout">
+      <h3 style="color:var(--p1);">Start with one pillar</h3>
+      <p>Pick the pillar most urgent for Epi/Biostats — likely Pillar 4 (Research integrity) given the data sensitivity of your work — and pilot the items there first.</p>
+    </div>
+    <div class="callout p3">
+      <h3 style="color:var(--p3);">Embed, don't add</h3>
+      <p>Use the 10–14 item course-level mirror inside your existing end-of-course evaluation. Response burden stays low; signal aggregates upward to program-level on identical anchors.</p>
+    </div>
+    <div class="callout p4">
+      <h3 style="color:var(--p4);">Make policy an output, not an input</h3>
+      <p>Let the first cycle's data write the next syllabus policy. Policy is a hypothesis tested against survey signal — not a permanent decree.</p>
+    </div>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 24. CLOSING -->
+<section class="slide closing-slide">
+  <div style="margin-top:auto;">
+    <div class="stripe" style="height:8px; width:160px; border-radius:4px; background: linear-gradient(90deg, var(--p1), var(--p2), var(--p3), var(--p4)); margin-bottom: 32px;"></div>
+    <h1 style="font-size:48px;">Thank you.</h1>
+    <p style="font-size:20px; max-width:780px;">Course-level redesign and program-level assessment are not two projects. They are one feedback loop — what the course asks students to disclose is what the program later measures.</p>
+  </div>
+  <div class="meta" style="margin-top:auto; color:#cbd5e1; font-size:18px;">
+    <strong style="color:white;">Wonki Lee, PhD</strong> &nbsp;·&nbsp; UCLA Teaching and Learning Center<br/>
+    <span style="opacity:.8;">Q&amp;A · Panel discussion · Case review</span>
+  </div>
+</section>
+
+</div>
+
+<div class="nav" id="nav">
+  <button id="first" aria-label="First slide"><<</button>
+  <button id="prev" aria-label="Previous">←</button>
+  <span class="progress"><span id="cur">1</span> / <span id="tot">1</span></span>
+  <button id="next" aria-label="Next">→</button>
+  <button id="last" aria-label="Last slide">>></button>
+  <button id="fullscreen" title="Fullscreen (F)" aria-label="Toggle fullscreen">⛶</button>
+  <button id="overview" title="Table of contents" aria-label="Open table of contents">▦</button>
+  <button id="print" title="Print to PDF" aria-label="Print to PDF">⎙</button>
+</div>
+
+<div class="toc-panel" id="tocPanel" hidden>
+  <div class="toc-backdrop" id="tocBackdrop"></div>
+  <div class="toc-card" role="dialog" aria-modal="true" aria-labelledby="tocTitle">
+    <div class="toc-head">
+      <h3 id="tocTitle">Table of Contents</h3>
+      <button class="toc-close" id="tocClose" aria-label="Close table of contents">Close</button>
+    </div>
+    <ol class="toc-list" id="tocList"></ol>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const tot = slides.length;
+  const isA11yMode = new URLSearchParams(location.search).get('accessible') === '1';
+  const footerLabel = 'UCLA Teaching and Learning Center';
+  const tocPanel = document.getElementById('tocPanel');
+  const tocList = document.getElementById('tocList');
+  const tocBackdrop = document.getElementById('tocBackdrop');
+  const tocClose = document.getElementById('tocClose');
+  const overviewBtn = document.getElementById('overview');
+  document.getElementById('tot').textContent = tot;
+  let i = 0;
+  let tocBuilt = false;
+  slides.forEach((s) => {
+    const footerName = s.querySelector('.footer span');
+    if (footerName) footerName.textContent = footerLabel;
+  });
+  if (isA11yMode) {
+    document.body.classList.add('a11y-mode');
+    slides.forEach((s, idx) => {
+      s.classList.add('active');
+      s.setAttribute('id', 'slide-' + (idx + 1));
+      s.setAttribute('role', 'region');
+      s.setAttribute('aria-label', 'Slide ' + (idx + 1));
+      const heading = s.querySelector('h1, h2');
+      if (heading) {
+        const headingId = 'slide-heading-' + (idx + 1);
+        heading.setAttribute('id', headingId);
+        s.setAttribute('aria-labelledby', headingId);
+      }
+      const c = s.querySelector('.counter');
+      if (c) c.textContent = (idx + 1) + ' / ' + tot;
+      const tables = Array.from(s.querySelectorAll('table'));
+      tables.forEach((table, tableIdx) => {
+        if (!table.querySelector('caption')) {
+          const caption = document.createElement('caption');
+          caption.className = 'sr-only';
+          caption.textContent = 'Slide ' + (idx + 1) + ' table ' + (tableIdx + 1);
+          table.prepend(caption);
+        }
+        const headTh = table.querySelectorAll('thead th');
+        if (headTh.length) {
+          headTh.forEach((th) => th.setAttribute('scope', 'col'));
+        } else {
+          const firstRow = table.querySelector('tr');
+          if (firstRow) {
+            firstRow.querySelectorAll('th').forEach((th) => th.setAttribute('scope', 'col'));
+          }
+        }
+        table.querySelectorAll('tbody tr').forEach((row) => {
+          const firstCell = row.querySelector('th');
+          if (firstCell) firstCell.setAttribute('scope', 'row');
+        });
+      });
+    });
+    document.getElementById('cur').textContent = 1;
+  } else {
+  function getSlideTitle(slide, idx){
+    const h1 = slide.querySelector('h1');
+    const h2 = slide.querySelector('h2');
+    const raw = (h1 ? h1.textContent : (h2 ? h2.textContent : '')).trim();
+    if (raw) return raw.replace(/\s+/g, ' ');
+    return 'Slide ' + (idx + 1);
+  }
+  function getSlideEyebrow(slide){
+    const e = slide.querySelector('.eyebrow');
+    return e ? e.textContent.trim().replace(/\s+/g, ' ') : '';
+  }
+  function buildToc(){
+    tocList.innerHTML = '';
+    slides.forEach((slide, idx) => {
+      const li = document.createElement('li');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'toc-link';
+      btn.dataset.index = String(idx);
+
+      const thumb = document.createElement('div');
+      thumb.className = 'toc-thumb';
+      const thumbViewport = document.createElement('div');
+      thumbViewport.className = 'toc-thumb-viewport';
+      const thumbScale = document.createElement('div');
+      thumbScale.className = 'toc-thumb-scale';
+      const thumbSlide = slide.cloneNode(true);
+      thumbSlide.classList.remove('active');
+      thumbSlide.classList.add('toc-thumb-slide');
+      thumbScale.appendChild(thumbSlide);
+      thumbViewport.appendChild(thumbScale);
+      thumb.appendChild(thumbViewport);
+
+      const meta = document.createElement('div');
+      meta.className = 'toc-meta';
+      const eyebrow = document.createElement('div');
+      eyebrow.className = 'toc-eyebrow';
+      const eyebrowText = getSlideEyebrow(slide);
+      eyebrow.textContent = 'Slide ' + (idx + 1) + (eyebrowText ? ' · ' + eyebrowText : '');
+      const title = document.createElement('div');
+      title.className = 'toc-title';
+      title.textContent = getSlideTitle(slide, idx);
+      meta.appendChild(eyebrow);
+      meta.appendChild(title);
+
+      btn.appendChild(thumb);
+      btn.appendChild(meta);
+      btn.onclick = () => {
+        show(idx);
+        closeToc();
+      };
+      li.appendChild(btn);
+      tocList.appendChild(li);
+    });
+    tocBuilt = true;
+  }
+  function updateTocActive(){
+    const links = Array.from(tocList.querySelectorAll('.toc-link'));
+    let activeLink = null;
+    links.forEach((link) => {
+      const idx = Number(link.dataset.index);
+      const isActive = idx === i;
+      link.classList.toggle('active', isActive);
+      if (isActive) activeLink = link;
+    });
+    if (activeLink) activeLink.scrollIntoView({ block: 'nearest' });
+  }
+  function openToc(){
+    if (!tocBuilt) buildToc();
+    tocPanel.hidden = false;
+    tocPanel.classList.add('open');
+    updateTocActive();
+  }
+  function closeToc(){
+    tocPanel.classList.remove('open');
+    tocPanel.hidden = true;
+  }
+  function show(n){
+    i = Math.max(0, Math.min(tot - 1, n));
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    document.getElementById('cur').textContent = i + 1;
+    // Update each slide's footer counter
+    slides.forEach((s, idx) => {
+      const c = s.querySelector('.counter');
+      if (c) c.textContent = (idx + 1) + ' / ' + tot;
+    });
+    updateTocActive();
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (_) {}
+  }
+  function next(){ show(i + 1); }
+  function prev(){ show(i - 1); }
+  function first(){ show(0); }
+  function last(){ show(tot - 1); }
+  function currentFullscreenElement(){
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+  function requestFull(){
+    const el = document.documentElement;
+    if (el.requestFullscreen) return el.requestFullscreen();
+    if (el.webkitRequestFullscreen) return el.webkitRequestFullscreen();
+    return null;
+  }
+  function exitFull(){
+    if (document.exitFullscreen) return document.exitFullscreen();
+    if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+    return null;
+  }
+  function updateFullscreenScale(){
+    const fs = currentFullscreenElement();
+    if (!fs) {
+      document.documentElement.style.setProperty('--fs-scale', '1');
+      return;
+    }
+    const baseW = 1200;
+    const baseH = 675;
+    const scale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH) * 0.97;
+    document.documentElement.style.setProperty('--fs-scale', String(Math.max(0.75, scale)));
+  }
+  function toggleFullscreen(){
+    try {
+      const result = currentFullscreenElement() ? exitFull() : requestFull();
+      if (result && typeof result.catch === 'function') result.catch(() => {});
+    } catch (_) {}
+  }
+  document.getElementById('first').onclick = first;
+  document.getElementById('next').onclick = next;
+  document.getElementById('prev').onclick = prev;
+  document.getElementById('last').onclick = last;
+  document.getElementById('fullscreen').onclick = toggleFullscreen;
+  document.getElementById('print').onclick = () => window.print();
+  document.addEventListener('fullscreenchange', updateFullscreenScale);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenScale);
+  window.addEventListener('resize', updateFullscreenScale);
+  updateFullscreenScale();
+  overviewBtn.onclick = () => {
+    if (tocPanel.classList.contains('open')) closeToc();
+    else openToc();
+  };
+  tocBackdrop.onclick = closeToc;
+  tocClose.onclick = closeToc;
+  document.addEventListener('keydown', (e) => {
+    const target = e.target;
+    if (target instanceof Element && target.closest('input, textarea, [contenteditable="true"]')) return;
+    if (tocPanel.classList.contains('open') && e.key === 'Escape') {
+      closeToc();
+      e.preventDefault();
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { prev(); e.preventDefault(); }
+    else if (e.key === 'Home') { show(0); }
+    else if (e.key === 'End') { show(tot - 1); }
+    else if ((e.code === 'KeyF' || e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      toggleFullscreen();
+      e.preventDefault();
+    }
+  });
+  // Honor hash on load (e.g., #5)
+  const h = parseInt((location.hash || '#1').slice(1), 10);
+  if (!isNaN(h)) show(h - 1); else show(0);
+  // Click left/right edges
+  document.addEventListener('click', (e) => {
+    const target = e.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest('.nav') || target.closest('#tocPanel') || target.closest('button') || target.closest('a') || target.closest('details') || target.closest('summary')) return;
+    const x = e.clientX / window.innerWidth;
+    if (x > 0.85) next();
+    else if (x < 0.15) prev();
+  });
+  }
+</script>
+</body>
+</html>
