@@ -1282,6 +1282,30 @@
   }
   body.a11y-mode .nav,
   body.a11y-mode .toc-panel { display: none !important; }
+  .mode-switch {
+    display: none;
+    position: fixed;
+    top: 14px;
+    right: 16px;
+    z-index: 45;
+  }
+  .mode-switch a {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 12px;
+    border-radius: 9px;
+    border: 1px solid #94a3b8;
+    color: #0f172a;
+    background: #f8fafc;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, .12);
+  }
+  .mode-switch a:focus-visible {
+    outline: 3px solid #1d4ed8;
+    outline-offset: 2px;
+  }
+  body.a11y-mode .mode-switch { display: block; }
   /* Print / PDF: each slide on its own page */
   @media print {
     body { background: white; overflow: visible; }
@@ -1314,6 +1338,9 @@
 </head>
 <body>
 <a class="skip-link" href="#deck">Skip to presentation content</a>
+<div class="mode-switch" id="modeSwitch">
+  <a id="toOriginalLink" href="UCSF-AI-Assessment-Talk.html">Original View</a>
+</div>
 <div class="deck" id="deck" role="main" aria-label="Presentation slides" tabindex="-1">
 
 <!-- 1. TITLE -->
@@ -2037,7 +2064,7 @@
   <button id="next" aria-label="Next">→</button>
   <button id="last" aria-label="Last slide">>></button>
   <button id="fullscreen" title="Fullscreen (F)" aria-label="Toggle fullscreen">⛶</button>
-  <button id="a11y" title="Open accessibility version" aria-label="Open accessibility version">A11Y</button>
+  <button id="a11y" title="Open accessibility version" aria-label="Open accessibility version">Accessible</button>
   <button id="overview" title="Table of contents" aria-label="Open table of contents">▦</button>
   <button id="print" title="Print to PDF" aria-label="Print to PDF">⎙</button>
 </div>
@@ -2064,6 +2091,7 @@
   const tocClose = document.getElementById('tocClose');
   const overviewBtn = document.getElementById('overview');
   const a11yBtn = document.getElementById('a11y');
+  const toOriginalLink = document.getElementById('toOriginalLink');
   document.getElementById('tot').textContent = tot;
   let i = 0;
   let tocBuilt = false;
@@ -2240,12 +2268,23 @@
     url.searchParams.set('accessible', '1');
     window.location.href = url.toString();
   }
+  function openOriginalVersion(){
+    const url = new URL(window.location.href);
+    url.searchParams.delete('accessible');
+    window.location.href = url.toString();
+  }
+  if (toOriginalLink) {
+    const originalUrl = new URL(window.location.href);
+    originalUrl.searchParams.delete('accessible');
+    toOriginalLink.href = originalUrl.toString();
+  }
   document.getElementById('first').onclick = first;
   document.getElementById('next').onclick = next;
   document.getElementById('prev').onclick = prev;
   document.getElementById('last').onclick = last;
   document.getElementById('fullscreen').onclick = toggleFullscreen;
   if (a11yBtn) a11yBtn.onclick = openAccessibilityVersion;
+  if (toOriginalLink) toOriginalLink.onclick = (e) => { e.preventDefault(); openOriginalVersion(); };
   document.getElementById('print').onclick = () => window.print();
   document.addEventListener('fullscreenchange', updateFullscreenScale);
   document.addEventListener('webkitfullscreenchange', updateFullscreenScale);
