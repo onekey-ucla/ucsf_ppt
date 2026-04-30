@@ -2037,6 +2037,7 @@
   <button id="next" aria-label="Next">→</button>
   <button id="last" aria-label="Last slide">>></button>
   <button id="fullscreen" title="Fullscreen (F)" aria-label="Toggle fullscreen">⛶</button>
+  <button id="a11y" title="Open accessibility version" aria-label="Open accessibility version">A11Y</button>
   <button id="overview" title="Table of contents" aria-label="Open table of contents">▦</button>
   <button id="print" title="Print to PDF" aria-label="Print to PDF">⎙</button>
 </div>
@@ -2062,6 +2063,7 @@
   const tocBackdrop = document.getElementById('tocBackdrop');
   const tocClose = document.getElementById('tocClose');
   const overviewBtn = document.getElementById('overview');
+  const a11yBtn = document.getElementById('a11y');
   document.getElementById('tot').textContent = tot;
   let i = 0;
   let tocBuilt = false;
@@ -2233,11 +2235,17 @@
       if (result && typeof result.catch === 'function') result.catch(() => {});
     } catch (_) {}
   }
+  function openAccessibilityVersion(){
+    const url = new URL(window.location.href);
+    url.searchParams.set('accessible', '1');
+    window.location.href = url.toString();
+  }
   document.getElementById('first').onclick = first;
   document.getElementById('next').onclick = next;
   document.getElementById('prev').onclick = prev;
   document.getElementById('last').onclick = last;
   document.getElementById('fullscreen').onclick = toggleFullscreen;
+  if (a11yBtn) a11yBtn.onclick = openAccessibilityVersion;
   document.getElementById('print').onclick = () => window.print();
   document.addEventListener('fullscreenchange', updateFullscreenScale);
   document.addEventListener('webkitfullscreenchange', updateFullscreenScale);
