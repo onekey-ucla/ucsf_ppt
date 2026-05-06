@@ -858,6 +858,40 @@
     line-height: 1.35;
     color: var(--ink-2);
   }
+  .light-detail .light-body p.usage-note {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dotted var(--line);
+  }
+  .light-choice-label {
+    margin: 0 0 6px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+  .light-switcher {
+    display: inline-flex;
+    gap: 6px;
+    margin: 2px 0 8px;
+  }
+  .light-switcher button {
+    border: 1px solid var(--line);
+    background: #ffffff;
+    color: var(--ink-2);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    padding: 5px 8px;
+    border-radius: 999px;
+    cursor: pointer;
+  }
+  .light-switcher button.active {
+    border-color: rgba(39, 116, 174, .45);
+    background: rgba(39, 116, 174, .10);
+    color: var(--ink);
+  }
+  .light-color-panel { display: none; }
+  .light-color-panel.active { display: block; }
   .light-detail .light-body p:last-child { margin-bottom: 0; }
   .checklist-dropdown {
     list-style: none;
@@ -2415,6 +2449,112 @@
   document.getElementById('tot').textContent = tot;
   let i = 0;
   let tocBuilt = false;
+  function appendLightGuidance() {
+    const detailsList = Array.from(document.querySelectorAll('.light-detail'));
+    detailsList.forEach((item) => {
+      const body = item.querySelector('.light-body');
+      const summary = item.querySelector('summary');
+      if (!body || !summary || body.querySelector('.usage-note')) return;
+
+      const text = summary.textContent.toLowerCase();
+      let guidance = '';
+      if (text.includes('yellow') && text.includes('red')) {
+        guidance = 'Use this as a staged rule: allow AI for planning/revision, then require an independent no-AI deliverable or defense for the graded outcome.';
+      } else if (text.includes('green') && text.includes('yellow')) {
+        guidance = 'Keep open AI exploration in Green components, but require disclosure and human justification in Yellow deliverables that are graded.';
+      } else if (text.includes('red')) {
+        guidance = 'State the boundary explicitly on the assignment sheet: no AI-generated text/code for the assessed response; keep this category for direct evidence of independent performance.';
+      } else if (text.includes('yellow')) {
+        guidance = 'Require a short AI-use statement (tool/version, prompts, accepted/rejected outputs) and grade the student\\'s decisions, not tool output quality alone.';
+      } else if (text.includes('green')) {
+        guidance = 'Encourage experimentation, but require basic source-checking and a brief note on how AI support influenced the student\\'s final choices.';
+      }
+      if (!guidance) return;
+
+      const p = document.createElement('p');
+      p.className = 'usage-note';
+      p.innerHTML = '<strong>How to apply:</strong> ' + guidance;
+      body.appendChild(p);
+    });
+  }
+  function enhanceMixedYellowRedDetails() {
+    const mixedList = Array.from(document.querySelectorAll('.light-detail')).filter((item) => {
+      const summary = item.querySelector('summary');
+      if (!summary) return false;
+      const text = summary.textContent.toLowerCase();
+      return text.includes('yellow') && text.includes('red') && !text.includes('green');
+    });
+
+    mixedList.forEach((item, idx) => {
+      const body = item.querySelector('.light-body');
+      if (!body || body.querySelector('.light-switcher')) return;
+
+      body.innerHTML = '';
+
+      const label = document.createElement('p');
+      label.className = 'light-choice-label';
+      label.textContent = 'Select a light state for specific guidance:';
+      body.appendChild(label);
+
+      const switcher = document.createElement('div');
+      switcher.className = 'light-switcher';
+      switcher.setAttribute('role', 'tablist');
+      switcher.setAttribute('aria-label', 'Light state guidance selector');
+
+      const yellowBtn = document.createElement('button');
+      yellowBtn.type = 'button';
+      yellowBtn.textContent = 'Yellow';
+      yellowBtn.dataset.color = 'yellow';
+      yellowBtn.setAttribute('aria-pressed', 'true');
+      yellowBtn.classList.add('active');
+
+      const redBtn = document.createElement('button');
+      redBtn.type = 'button';
+      redBtn.textContent = 'Red';
+      redBtn.dataset.color = 'red';
+      redBtn.setAttribute('aria-pressed', 'false');
+
+      switcher.appendChild(yellowBtn);
+      switcher.appendChild(redBtn);
+      body.appendChild(switcher);
+
+      const yellowPanel = document.createElement('div');
+      yellowPanel.className = 'light-color-panel active';
+      yellowPanel.dataset.color = 'yellow';
+      yellowPanel.innerHTML = [
+        '<p><strong>Allowed (Yellow):</strong> AI is allowed for support work (planning, drafting help, debugging, editing) with disclosure.</p>',
+        '<p><strong>Why:</strong> preserves workflow support while keeping student reasoning and decisions visible.</p>',
+        '<p class="usage-note"><strong>How to apply:</strong> require an AI-use note (tool/version, prompts, accepted/rejected outputs) and grade the student\'s judgment.</p>'
+      ].join('');
+
+      const redPanel = document.createElement('div');
+      redPanel.className = 'light-color-panel';
+      redPanel.dataset.color = 'red';
+      redPanel.innerHTML = [
+        '<p><strong>Allowed (Red):</strong> AI generation is not allowed for the assessed response or live performance component.</p>',
+        '<p><strong>Why not allowed:</strong> this segment is intended as direct evidence of independent student reasoning/performance.</p>',
+        '<p class="usage-note"><strong>How to apply:</strong> add an explicit no-AI clause on that component and verify with oral defense/demo/checkpoint.</p>'
+      ].join('');
+
+      body.appendChild(yellowPanel);
+      body.appendChild(redPanel);
+
+      function activate(color) {
+        const isYellow = color === 'yellow';
+        yellowBtn.classList.toggle('active', isYellow);
+        redBtn.classList.toggle('active', !isYellow);
+        yellowBtn.setAttribute('aria-pressed', String(isYellow));
+        redBtn.setAttribute('aria-pressed', String(!isYellow));
+        yellowPanel.classList.toggle('active', isYellow);
+        redPanel.classList.toggle('active', !isYellow);
+      }
+
+      yellowBtn.addEventListener('click', () => activate('yellow'));
+      redBtn.addEventListener('click', () => activate('red'));
+    });
+  }
+  appendLightGuidance();
+  enhanceMixedYellowRedDetails();
   if (isTlcMode) {
     document.body.classList.add('tlc-mode');
     const tlcLayouts = ['tlc-layout-bottom', 'tlc-layout-right', 'tlc-layout-top', 'tlc-layout-left'];
