@@ -2553,8 +2553,12 @@
       redBtn.addEventListener('click', () => activate('red'));
     });
   }
-  appendLightGuidance();
-  enhanceMixedYellowRedDetails();
+  try {
+    appendLightGuidance();
+    enhanceMixedYellowRedDetails();
+  } catch (err) {
+    console.error('Light guidance enhancement failed:', err);
+  }
   if (isTlcMode) {
     document.body.classList.add('tlc-mode');
     const tlcLayouts = ['tlc-layout-bottom', 'tlc-layout-right', 'tlc-layout-top', 'tlc-layout-left'];
