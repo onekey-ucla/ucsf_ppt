@@ -84,6 +84,206 @@
     overflow-x: hidden;
     scrollbar-gutter: stable;
   }
+  /* TLC template visual mode (enabled by ?tlc=1) */
+  body.tlc-mode {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    --ink: #262d34;
+    --ink-2: #434343;
+    --muted: #57585b;
+    --line: #d7d8da;
+    --bg-soft: #f3f3f3;
+    --p1: #005587;
+    --p2: #2c75ac;
+    --p3: #0097a7;
+    --p4: #00375b;
+    background: #e7e4dd;
+  }
+  body.tlc-mode .slide {
+    border-radius: 0;
+    border: 1px solid #d7d8da;
+    box-shadow: 0 10px 24px rgba(10, 22, 34, .12);
+  }
+  body.tlc-mode .slide::before,
+  body.tlc-mode .slide::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    pointer-events: none;
+    display: none;
+  }
+  /* Template layout motifs (top/bottom/side variants) */
+  body.tlc-mode .slide.tlc-layout-bottom::before {
+    display: block;
+    left: 0;
+    right: 0;
+    bottom: 16px;
+    height: 10px;
+    background:
+      linear-gradient(90deg, #0f3255 0 42%, #2c75ac 42% 58%, #0f3255 58% 100%);
+  }
+  body.tlc-mode .slide.tlc-layout-bottom::after {
+    display: block;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 16px;
+    background: #0f3255;
+  }
+  body.tlc-mode .slide.tlc-layout-top::before {
+    display: block;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 14px;
+    background: #0f3255;
+  }
+  body.tlc-mode .slide.tlc-layout-top::after {
+    display: block;
+    left: 0;
+    right: 0;
+    top: 14px;
+    height: 10px;
+    background:
+      linear-gradient(90deg, #2c75ac 0 40%, #aec2d8 40% 60%, #2c75ac 60% 100%);
+  }
+  body.tlc-mode .slide.tlc-layout-right::before {
+    display: block;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 104px;
+    background:
+      radial-gradient(circle at 30% 14%, #aec2d8 0 30%, transparent 31%),
+      radial-gradient(circle at 110% 25%, #0b4a72 0 44%, transparent 45%),
+      radial-gradient(circle at 8% 72%, #3377bd 0 35%, transparent 36%),
+      radial-gradient(circle at 82% 88%, #78a8d8 0 28%, transparent 29%),
+      linear-gradient(180deg, #0b4a72 0 22%, #78a8d8 22% 42%, #3377bd 42% 70%, #0b4a72 70% 100%);
+  }
+  body.tlc-mode .slide.tlc-layout-left::before {
+    display: block;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 104px;
+    background:
+      radial-gradient(circle at 70% 18%, #aec2d8 0 30%, transparent 31%),
+      radial-gradient(circle at -10% 28%, #0b4a72 0 44%, transparent 45%),
+      radial-gradient(circle at 88% 70%, #3377bd 0 35%, transparent 36%),
+      radial-gradient(circle at 20% 86%, #78a8d8 0 28%, transparent 29%),
+      linear-gradient(180deg, #0b4a72 0 22%, #78a8d8 22% 42%, #3377bd 42% 70%, #0b4a72 70% 100%);
+  }
+  body.tlc-mode .slide > * {
+    position: relative;
+    z-index: 1;
+  }
+  body.tlc-mode .title-slide,
+  body.tlc-mode .closing-slide {
+    background: #005587;
+  }
+  body.tlc-mode .title-slide::before,
+  body.tlc-mode .title-slide::after,
+  body.tlc-mode .closing-slide::before,
+  body.tlc-mode .closing-slide::after {
+    display: none;
+  }
+  body.tlc-mode .title-slide .stripe,
+  body.tlc-mode .closing-slide .stripe {
+    background: #ffffff !important;
+  }
+  body.tlc-mode .nav,
+  body.tlc-mode .toc-card,
+  body.tlc-mode .toc-link,
+  body.tlc-mode .toc-close,
+  body.tlc-mode .callout,
+  body.tlc-mode .pillar-card,
+  body.tlc-mode .hypothesis,
+  body.tlc-mode .course-card,
+  body.tlc-mode .checklist li,
+  body.tlc-mode .checklist-dropdown details,
+  body.tlc-mode .flow-card,
+  body.tlc-mode .decision-card,
+  body.tlc-mode .scenario-card,
+  body.tlc-mode .if-card,
+  body.tlc-mode .then-card,
+  body.tlc-mode .bd-card,
+  body.tlc-mode .light-card,
+  body.tlc-mode .q-list,
+  body.tlc-mode .ptag,
+  body.tlc-mode .section-bar,
+  body.tlc-mode .gap-drop,
+  body.tlc-mode .use-card,
+  body.tlc-mode .use-step {
+    border-radius: 0 !important;
+  }
+  body.tlc-mode .callout,
+  body.tlc-mode .pillar-card,
+  body.tlc-mode .hypothesis,
+  body.tlc-mode .course-card,
+  body.tlc-mode .checklist li,
+  body.tlc-mode .checklist-dropdown details,
+  body.tlc-mode .flow-card,
+  body.tlc-mode .decision-card,
+  body.tlc-mode .scenario-card,
+  body.tlc-mode .if-card,
+  body.tlc-mode .then-card,
+  body.tlc-mode .bd-card,
+  body.tlc-mode .light-card,
+  body.tlc-mode .q-list,
+  body.tlc-mode .gap-drop,
+  body.tlc-mode .use-card,
+  body.tlc-mode .use-step {
+    background: #ffffff;
+    border-color: #d7d8da;
+    box-shadow: none !important;
+  }
+  body.tlc-mode .eyebrow,
+  body.tlc-mode .footer,
+  body.tlc-mode .label,
+  body.tlc-mode .toc-eyebrow {
+    color: #57585b;
+  }
+  body.tlc-mode .footer { bottom: 22px; }
+  body.tlc-mode .slide.tlc-layout-bottom .footer { bottom: 30px; }
+  body.tlc-mode .slide h1,
+  body.tlc-mode .slide h2,
+  body.tlc-mode .slide h3 {
+    color: #262d34;
+  }
+  body.tlc-mode .slide p,
+  body.tlc-mode .slide li,
+  body.tlc-mode .lede {
+    color: #434343;
+  }
+  body.tlc-mode .title-slide h1,
+  body.tlc-mode .closing-slide h1,
+  body.tlc-mode .title-slide .meta,
+  body.tlc-mode .closing-slide p {
+    color: #ffffff;
+  }
+  body.tlc-mode .nav {
+    background: rgba(0, 55, 91, .95);
+    padding: 8px 12px;
+  }
+  body.tlc-mode .nav button {
+    border-radius: 0;
+  }
+  body.tlc-mode .ptag {
+    letter-spacing: 0.07em;
+    background: #005587;
+    color: #ffffff;
+    border: 0;
+  }
+  body.tlc-mode .section-bar {
+    background: #f3f3f3;
+    color: #005587;
+    border: 1px solid #d7d8da;
+  }
+  body.tlc-mode table th { color: #57585b; border-bottom-color: #c7c9cc; }
+  body.tlc-mode .toc-head { background: #f3f3f3; }
+  body.tlc-mode .toc-link.active { background: rgba(0, 85, 135, .08); border-color: rgba(0, 85, 135, .35); }
+  body.tlc-mode .mode-switch a {
+    border-radius: 0;
+  }
   :fullscreen .slide,
   :-webkit-full-screen .slide {
     width: 1200px;
@@ -2083,6 +2283,7 @@
 <script>
   const slides = Array.from(document.querySelectorAll('.slide'));
   const tot = slides.length;
+  const isTlcMode = false;
   const isA11yMode = new URLSearchParams(location.search).get('accessible') === '1';
   const footerLabel = 'UCLA Teaching and Learning Center';
   const tocPanel = document.getElementById('tocPanel');
@@ -2095,6 +2296,31 @@
   document.getElementById('tot').textContent = tot;
   let i = 0;
   let tocBuilt = false;
+  if (isTlcMode) {
+    document.body.classList.add('tlc-mode');
+    const tlcLayouts = ['tlc-layout-bottom', 'tlc-layout-right', 'tlc-layout-top', 'tlc-layout-left'];
+    slides.forEach((s, idx) => {
+      if (s.classList.contains('title-slide') || s.classList.contains('closing-slide')) return;
+      s.classList.add(tlcLayouts[idx % tlcLayouts.length]);
+    });
+    const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null);
+    const updates = [];
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (!node || !node.nodeValue) continue;
+      const parent = node.parentElement;
+      if (!parent) continue;
+      if (parent.closest('script, style')) continue;
+      const oldText = node.nodeValue;
+      const newText = oldText
+        .replace(/\bPillars\b/g, 'Priorities')
+        .replace(/\bPillar\b/g, 'Priority')
+        .replace(/\bpillars\b/g, 'priorities')
+        .replace(/\bpillar\b/g, 'priority');
+      if (newText !== oldText) updates.push([node, newText]);
+    }
+    updates.forEach(([node, txt]) => { node.nodeValue = txt; });
+  }
   slides.forEach((s) => {
     const footerName = s.querySelector('.footer span');
     if (footerName) footerName.textContent = footerLabel;

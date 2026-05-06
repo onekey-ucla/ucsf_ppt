@@ -42,7 +42,7 @@
     .grid {
       margin-top: 26px;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 14px;
     }
     .card {
@@ -101,6 +101,7 @@
         <p>Linear-reading mode optimized for screen readers and stricter accessibility checking.</p>
         <a class="link-btn secondary" href="UCSF-AI-Assessment-Talk.html?accessible=1">Open accessibility version</a>
       </section>
+
     </div>
   </main>
 </body>
