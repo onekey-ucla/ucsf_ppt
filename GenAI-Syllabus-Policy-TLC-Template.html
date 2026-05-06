@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Developing a GenAI Syllabus Policy | TLC Template Version</title>
+<style>
+  :root {
+    --ink: #262d34;
+    --ink-2: #3a434d;
+    --muted: #57585b;
+    --line: #d7d8da;
+    --bg: #f3f3f3;
+    --card: #ffffff;
+    --blue: #005587;
+    --blue-2: #2c75ac;
+    --teal: #0097a7;
+    --warm: #e7e4dd;
+    --ok: #1f7a4d;
+    --warn: #b77700;
+    --risk: #a42828;
+    --shadow: 0 14px 34px rgba(10, 22, 34, .14);
+    --fs-scale: 1;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(160deg, #edf0f4 0%, var(--warm) 100%);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  .deck {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .slide {
+    position: absolute;
+    width: min(1240px, 96vw);
+    aspect-ratio: 16 / 9;
+    max-height: 92vh;
+    background: var(--card);
+    border-radius: 0;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    display: none;
+    padding: 38px 50px 54px;
+    border: 1px solid #d4d7dc;
+  }
+  :fullscreen .slide,
+  :-webkit-full-screen .slide {
+    width: 1240px;
+    height: 697.5px;
+    max-height: none;
+    transform: scale(var(--fs-scale));
+    transform-origin: center center;
+  }
+  .slide.active { display: block; }
+  .slide.scrollable { overflow-y: auto; overflow-x: hidden; }
+  .top-band {
+    margin: -38px -50px 24px;
+    padding: 14px 50px;
+    background: linear-gradient(90deg, var(--blue) 0%, var(--blue-2) 72%, var(--teal) 100%);
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  h1 {
+    margin: 0 0 10px;
+    font-size: 46px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  h2 {
+    margin: 0 0 12px;
+    font-size: 30px;
+    line-height: 1.15;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  p, li {
+    margin: 0 0 10px;
+    color: var(--ink-2);
+    font-size: 19px;
+    line-height: 1.48;
+  }
+  ul { margin: 0; padding-left: 22px; }
+  .lede {
+    font-size: 22px;
+    color: var(--ink);
+    line-height: 1.45;
+    margin-bottom: 14px;
+  }
+  .meta {
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .stripe {
+    width: 150px;
+    height: 8px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--blue), var(--teal));
+    margin-bottom: 18px;
+  }
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  .card {
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: #fff;
+    padding: 14px 16px;
+  }
+  .card.soft { background: #f7fafc; }
+  .card h3 .tag {
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: var(--blue);
+    background: rgba(0, 85, 135, .10);
+    border-radius: 0;
+    padding: 3px 8px;
+    vertical-align: middle;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .stat {
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: #fff;
+    padding: 12px;
+  }
+  .stat .k {
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--blue);
+    letter-spacing: -0.02em;
+  }
+  .stat .l {
+    margin-top: 5px;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+  .note {
+    margin-top: 12px;
+    border-left: 5px solid var(--blue);
+    padding: 10px 12px;
+    border-radius: 0;
+    background: #f6f9fc;
+    font-size: 16px;
+    color: var(--ink-2);
+  }
+  .ok { border-top: 4px solid var(--ok); }
+  .warn { border-top: 4px solid var(--warn); }
+  .risk { border-top: 4px solid var(--risk); }
+  .priority {
+    border-top: 6px solid var(--blue);
+    padding-top: 12px;
+  }
+  .priority.p2 { border-top-color: var(--teal); }
+  .priority.p3 { border-top-color: #2c75ac; }
+  .priority.p4 { border-top-color: #57585b; }
+  .step-list {
+    counter-reset: step;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .step-list li {
+    counter-increment: step;
+    margin-bottom: 10px;
+    padding: 10px 12px 10px 44px;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    position: relative;
+    background: #fff;
+    font-size: 17px;
+  }
+  .step-list li::before {
+    content: counter(step);
+    position: absolute;
+    left: 12px;
+    top: 9px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--blue);
+    color: #fff;
+    text-align: center;
+    line-height: 22px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .small {
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--muted);
+  }
+  .footer {
+    position: absolute;
+    left: 50px;
+    right: 50px;
+    bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    color: var(--muted);
+    font-size: 12px;
+  }
+  .footer .counter { font-variant-numeric: tabular-nums; }
+  .toc-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: none;
+  }
+  .toc-panel.open { display: block; }
+  .toc-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 11, 20, .48);
+  }
+  .toc-card {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: min(420px, 94vw);
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+  }
+  .toc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-bottom: 1px solid var(--line);
+    background: #f8fafc;
+  }
+  .toc-head h3 {
+    margin: 0;
+    font-size: 16px;
+  }
+  .toc-head button {
+    border: 1px solid var(--line);
+    background: #fff;
+    border-radius: 0;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  .toc-list {
+    margin: 0;
+    padding: 10px;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+  }
+  .toc-list button {
+    width: 100%;
+    text-align: left;
+    border: 1px solid var(--line);
+    border-radius: 0;
+    background: #fff;
+    color: var(--ink-2);
+    padding: 8px 10px;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  .toc-list button.active {
+    border-color: rgba(0, 85, 135, .45);
+    background: rgba(0, 85, 135, .07);
+    color: var(--ink);
+  }
+  .nav {
+    position: fixed;
+    left: 50%;
+    bottom: 14px;
+    transform: translateX(-50%);
+    background: rgba(17, 24, 32, .9);
+    color: #fff;
+    border-radius: 0;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    z-index: 20;
+    backdrop-filter: blur(6px);
+  }
+  .nav button {
+    border: 0;
+    background: transparent;
+    color: #fff;
+    padding: 4px 9px;
+    border-radius: 0;
+    cursor: pointer;
+    font-size: 13px;
+  }
+  .nav button:hover { background: rgba(255, 255, 255, .14); }
+  .nav .progress {
+    font-size: 12px;
+    opacity: .86;
+    padding: 0 4px;
+  }
+  @media (max-width: 900px) {
+    .slide { padding: 28px 28px 48px; }
+    .top-band { margin: -28px -28px 16px; padding: 12px 28px; }
+    h1 { font-size: 33px; }
+    h2 { font-size: 25px; }
+    p, li { font-size: 16px; }
+    .lede { font-size: 18px; }
+    .grid-2, .grid-3, .stats { grid-template-columns: 1fr; }
+    .footer { left: 28px; right: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+  <section class="slide active">
+    <div class="top-band">TLC Resource Alignment · Published April 2026</div>
+    <div class="stripe"></div>
+    <h1>Developing a GenAI Syllabus Policy</h1>
+    <p class="lede">A learning-centered framework for faculty decision-making in the age of GenAI.</p>
+    <p>Presented by Wonki Lee, PhD · UCLA Teaching and Learning Center</p>
+    <p class="meta">This version is visually adapted to the TLC slide template style and aligned to the April 2026 guidance text.</p>
+    <div class="note"><strong>Terminology note:</strong> this deck uses <strong>priorities</strong> (not pillars) throughout.</div>
+    <div class="footer"><span>UCLA Teaching and Learning Center</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top-band">Roadmap</div>
+    <h2>Today’s flow</h2>
+    <ol class="step-list">
+      <li>Why this policy conversation matters now</li>
+      <li>What current survey and research signals show</li>
+      <li>Four priorities for policy design</li>
+      <li>Step-by-step drafting workflow</li>
+      <li>Communication and implementation plan</li>
+      <li>Resources and next actions</li>
+    </ol>
+    <div class="footer"><span>Developing a GenAI Syllabus Policy</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top-band">Introduction</div>
+    <h2>GenAI creates both opportunity and uncertainty</h2>
+    <p>Faculty responses understandably vary: exploration, cautious use, or resistance. The pace of tool change can make policy drafting feel reactive and overwhelming.</p>
+    <p>The TLC goal is to support an <strong>informed position</strong> grounded in research, disciplinary context, and explicit student-learning priorities.</p>
+    <div class="grid-2" style="margin-top:10px;">
+      <div class="card soft">
+        <h3>Scope of this resource</h3>
+        <ul>
+          <li>How GenAI affects learning and assessment design</li>
+          <li>How to draft a course GenAI policy step by step</li>
+          <li>How to communicate and reinforce policy in practice</li>
+        </ul>
+      </div>
+      <div class="card soft">
+        <h3>Out of scope</h3>
+        <ul>
+          <li>Enforcement workflows for suspected misconduct</li>
+          <li>Case adjudication under conduct policy</li>
+        </ul>
+        <p class="small">For those needs, see UCLA guidance on suspected AI misconduct and 2026 Student Code updates.</p>
+      </div>
+    </div>
+    <div class="footer"><span>Section 1 · Context</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top-band">Survey Signals</div>
+    <h2>Students are already integrating GenAI into coursework</h2>
+    <div class="stats">
+      <div class="stat"><div class="k">73%</div><div class="l">UCLA seniors reporting GenAI use for coursework (2025 Senior Survey)</div></div>
+      <div class="stat"><div class="k">60%</div><div class="l">Use GenAI for research-related tasks</div></div>
+      <div class="stat"><div class="k">57%</div><div class="l">Use for brainstorming and exam preparation</div></div>
+      <div class="stat"><div class="k">85%</div><div class="l">Student Voice respondents using GenAI in last year</div></div>
+    </div>
+    <div class="grid-2" style="margin-top:12px;">
+      <div class="card">
+        <h3>Lower-frequency uses</h3>
+        <ul>
+          <li>Draft written assignments (31%)</li>
+          <li>Generate code (30%)</li>
+          <li>Translate coursework language (25%)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Interpretation</h3>
+        <p>Use is widespread but heterogeneous by task. Policy should move beyond blanket "allow/ban" and define assignment-specific expectations.</p>
+      </div>
+    </div>
+    <div class="footer"><span>Section 2 · GenAI Impact on Learning</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Learning Opportunities</div>
+    <h2>Where GenAI can support student learning</h2>
+    <div class="grid-3">
+      <div class="card ok">
+        <h3>Accessibility and personalization</h3>
+        <p>Research indicates assistive and adaptive AI tools can reduce barriers for students with disabilities and support independent learning pathways.</p>
+        <p class="small">Dumitru et al., 2025</p>
+      </div>
+      <div class="card ok">
+        <h3>Feedback loops and motivation</h3>
+        <p>Conversational AI feedback can support iterative revision, lower anxiety, and sustain engagement when integrated with instructor guidance.</p>
+        <p class="small">Mahapatra, 2024; Steiss et al., 2024; Ozcelik &amp; Eksi, 2024</p>
+      </div>
+      <div class="card ok">
+        <h3>AI literacy and accountability</h3>
+        <p>Requiring students to explain how, why, and to what extent they used AI can turn tool use into reflective practice.</p>
+        <p class="small">Accountability-by-design emphasis</p>
+      </div>
+    </div>
+    <div class="note"><strong>Design implication:</strong> integrate GenAI where it advances learning goals, not where it simply accelerates output production.</div>
+    <div class="footer"><span>Section 2 · Opportunity Lens</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Learning Risks</div>
+    <h2>Why policy precision matters</h2>
+    <div class="grid-3">
+      <div class="card risk">
+        <h3>Authorship and integrity ambiguity</h3>
+        <p>GenAI blurs boundaries between legitimate assistance and dishonest substitution, especially in take-home writing tasks.</p>
+        <p class="small">Ncube et al., 2026</p>
+      </div>
+      <div class="card warn">
+        <h3>Over-reliance risk</h3>
+        <p>Unchecked use can reduce independent critical thinking, reasoning stamina, and long-term skill development.</p>
+        <p class="small">Stadler et al., 2024; Gerlich, 2025</p>
+      </div>
+      <div class="card warn">
+        <h3>Accuracy and citation failures</h3>
+        <p>Hallucinated information and unreliable references can undermine trustworthiness of submitted work.</p>
+        <p class="small">Walters &amp; Wilder, 2023; Watson, 2024</p>
+      </div>
+    </div>
+    <div class="note"><strong>Assessment implication:</strong> shift from product-only tasks toward process-based evidence of learning and justification.</div>
+    <div class="footer"><span>Section 2 · Risk Lens</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide">
+    <div class="top-band">Framework</div>
+    <h2>Four priorities (not pillars) for course policy design</h2>
+    <div class="grid-2">
+      <div class="card priority p1">
+        <h3><span class="tag">Priority 1</span>Learning-goal alignment</h3>
+        <p>Start with intended outcomes and define acceptable AI use based on what evidence of learning matters most.</p>
+      </div>
+      <div class="card priority p2">
+        <h3><span class="tag">Priority 2</span>Transparent use boundaries</h3>
+        <p>Specify assignment-level allowed, limited, and prohibited use cases instead of global blanket rules.</p>
+      </div>
+      <div class="card priority p3">
+        <h3><span class="tag">Priority 3</span>Citation and verification norms</h3>
+        <p>Require attribution and verification practices that fit your discipline and task type.</p>
+      </div>
+      <div class="card priority p4">
+        <h3><span class="tag">Priority 4</span>Ongoing communication and revision</h3>
+        <p>Treat policy as a living instructional tool, updated through student feedback and course evidence.</p>
+      </div>
+    </div>
+    <div class="footer"><span>Section 3 · Priority Framework</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Before Drafting</div>
+    <h2>Foundational checks before writing policy language</h2>
+    <ol class="step-list">
+      <li><strong>Understand what tools do (and do not do):</strong> test ChatGPT, Copilot, Gemini, and discipline-specific tools or review trusted media if direct testing is not possible.</li>
+      <li><strong>Map disciplinary context:</strong> identify how GenAI is actually used in your field (brainstorming, drafting, coding, analysis, design, synthesis, automation).</li>
+      <li><strong>Clarify learning objectives first:</strong> policy should express pedagogical intent, not a reactionary technology stance.</li>
+      <li><strong>Check assignment vulnerability:</strong> ask if a generic chatbot could pass tasks without genuine course learning.</li>
+    </ol>
+    <div class="note">Backward design principle: move from outcomes to evidence to activities (Wiggins &amp; McTighe, 2005).</div>
+    <div class="footer"><span>Section 4 · Preconditions</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Align with Learning Goals</div>
+    <h2>Reframe the core policy question</h2>
+    <p class="lede">From "Should AI be allowed?" to "What evidence of learning is non-negotiable?"</p>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Example: writing-intensive course</h3>
+        <p>Using AI to summarize a novel before close reading can undermine goals such as textual analysis and argument development.</p>
+        <p>Using AI for late-stage copyediting after original reasoning may be acceptable with disclosure.</p>
+      </div>
+      <div class="card">
+        <h3>Example: computer science course</h3>
+        <p>AI-assisted coding can be an explicit learning objective, but students still need foundational debugging and validation skills.</p>
+        <p class="small">Denny et al., 2024</p>
+      </div>
+    </div>
+    <div class="note"><strong>Design principle:</strong> complex human-centered outcomes (creative reasoning, ethical judgment, transfer) should remain visible in assessment evidence.</div>
+    <div class="footer"><span>Section 4 · Goal Alignment</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Test Assessments Against AI</div>
+    <h2>Use AI output as a diagnostic, not as a shortcut</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Recommended test</h3>
+        <ul>
+          <li>Paste prompt + rubric into a GenAI tool.</li>
+          <li>Evaluate where AI can produce acceptable product-only outputs.</li>
+          <li>Revise task to require process evidence, context, reflection, or situated application.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Privacy guardrail</h3>
+        <p>Do not enter sensitive data or intellectual property into public tools.</p>
+        <p>Prefer UCLA-supported tools listed by DTS for stronger privacy and security controls.</p>
+      </div>
+    </div>
+    <div class="note">Scaffolding, metacognitive reflection, and collaborative real-world application can reduce AI-only completion pathways.</div>
+    <div class="footer"><span>Section 4 · Assessment Design</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Drafting Steps</div>
+    <h2>Core elements to include in your policy draft</h2>
+    <div class="grid-3">
+      <div class="card">
+        <h3>1) Ground in outcomes + context</h3>
+        <p>Reference course learning goals, disciplinary standards, and professional expectations students will face after the course.</p>
+      </div>
+      <div class="card">
+        <h3>2) Name allowed/prohibited uses</h3>
+        <p>Different assignments can have different rules. Explain those differences explicitly in syllabus and assignment sheets.</p>
+      </div>
+      <div class="card">
+        <h3>3) Provide citation model</h3>
+        <p>Give concrete examples using norms from APA, MLA, or Chicago, and define expectations for verification.</p>
+      </div>
+    </div>
+    <div class="note"><strong>Practical note:</strong> your full policy may be long. Use a concise syllabus statement plus expanded guidance in Bruin Learn.</div>
+    <div class="footer"><span>Section 5 · Policy Drafting</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Citation and Accountability</div>
+    <h2>Five-step checklist for student GenAI use</h2>
+    <ol class="step-list">
+      <li>Confirm permission from your instructor/course policy before using GenAI.</li>
+      <li>Reflect on whether GenAI use supports or undermines assignment learning goals.</li>
+      <li>Acknowledge how the tool was used (appendix, cover note, or required statement).</li>
+      <li>Cite GenAI use in text and in references/works cited using course-required style.</li>
+      <li>Verify outputs and sources for factual accuracy, citation integrity, and reliability.</li>
+    </ol>
+    <p class="small">Adapted from Write What Matters (Liza Long) checklist guidance.</p>
+    <div class="footer"><span>Section 5 · Student Guidance</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Implementation</div>
+    <h2>Reinforce policy through active and passive communication</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>Active communication</h3>
+        <ul>
+          <li>Class discussion or Q&amp;A on course AI expectations</li>
+          <li>In-class ethics activities</li>
+          <li>Policy quiz and assignment feedback touchpoints</li>
+          <li>Office hours and targeted coaching conversations</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Passive communication</h3>
+        <ul>
+          <li>Syllabus policy statement + assignment-specific notes</li>
+          <li>Bruin Learn FAQ and announcements</li>
+          <li>Rubrics and prompts that include use boundaries</li>
+          <li>Term-long reminders tied to major deliverables</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note">These strategies reflect Educause / Auburn Biggio Center guidance on communicating instructional AI positions.</div>
+    <div class="footer"><span>Section 6 · Implementation</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Partnership</div>
+    <h2>Move from policing to co-learning with students</h2>
+    <div class="grid-2">
+      <div class="card soft">
+        <h3>Invite student input</h3>
+        <ul>
+          <li>Collect feedback on policy clarity and workload impact</li>
+          <li>Discuss how other instructors are framing GenAI use</li>
+          <li>Co-create class agreements for ethical use norms</li>
+        </ul>
+      </div>
+      <div class="card soft">
+        <h3>Use quick evidence loops</h3>
+        <ul>
+          <li>Anonymous pulse survey on beliefs and use habits</li>
+          <li>Short reflection prompts after AI-enabled assignments</li>
+          <li>Revise policy language before next offering</li>
+        </ul>
+      </div>
+    </div>
+    <div class="note"><strong>Key stance:</strong> policy is an instructional design tool that evolves with evidence, not a static compliance statement.</div>
+    <div class="footer"><span>Section 6 · Partnership and Feedback</span><span class="counter"></span></div>
+  </section>
+
+  <section class="slide scrollable">
+    <div class="top-band">Resources</div>
+    <h2>UCLA and beyond: where to go next</h2>
+    <div class="grid-2">
+      <div class="card">
+        <h3>UCLA resources</h3>
+        <ul>
+          <li>TLC GenAI teaching resources and workshops</li>
+          <li>DTS AI Foundations and AI Education Hub</li>
+          <li>DTS approved AI tools + privacy guidance</li>
+          <li>WI+RE Intro to GenAI and ChatGPT</li>
+          <li>HumTech guidance for AI-resistant and AI-integrated assignments</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>External references</h3>
+        <ul>
+          <li>Stanford HAI 2025 AI Index Report</li>
+          <li>Anna Mills: AI and College Writing (student orientation draft)</li>
+          <li>Syllabi Policies for Generative AI Repository (global examples)</li>
+        </ul>
+      </div>
+    </div>
+    <p class="small" style="margin-top:10px;">For sample policy language, see the TLC Example GenAI Course Policies resource and contribute your own departmental examples.</p>
+    <div class="footer"><span>Closing · Developing a GenAI Syllabus Policy</span><span class="counter"></span></div>
+  </section>
+
+</div>
+
+<div class="nav" id="nav">
+  <button id="first" aria-label="First slide">&lt;&lt;</button>
+  <button id="prev" aria-label="Previous slide">&larr;</button>
+  <span class="progress"><span id="cur">1</span> / <span id="tot">1</span></span>
+  <button id="next" aria-label="Next slide">&rarr;</button>
+  <button id="last" aria-label="Last slide">&gt;&gt;</button>
+  <button id="tocOpen" aria-label="Open table of contents">TOC</button>
+  <button id="fullscreen" aria-label="Toggle fullscreen">F</button>
+</div>
+
+<div class="toc-panel" id="tocPanel" hidden>
+  <div class="toc-backdrop" id="tocBackdrop"></div>
+  <div class="toc-card" role="dialog" aria-modal="true" aria-labelledby="tocTitle">
+    <div class="toc-head">
+      <h3 id="tocTitle">Slide Navigator</h3>
+      <button id="tocClose" aria-label="Close table of contents">Close</button>
+    </div>
+    <ol class="toc-list" id="tocList"></ol>
+  </div>
+</div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const deck = document.getElementById('deck');
+  const tot = slides.length;
+  let i = 0;
+  const tocPanel = document.getElementById('tocPanel');
+  const tocList = document.getElementById('tocList');
+  let tocBuilt = false;
+
+  document.getElementById('tot').textContent = String(tot);
+
+  function titleOf(slide, idx) {
+    const h1 = slide.querySelector('h1');
+    const h2 = slide.querySelector('h2');
+    const text = (h1 ? h1.textContent : (h2 ? h2.textContent : 'Slide ' + (idx + 1))).trim();
+    return text.replace(/\s+/g, ' ');
+  }
+  function updateCounters() {
+    slides.forEach((s, idx) => {
+      const c = s.querySelector('.counter');
+      if (c) c.textContent = (idx + 1) + ' / ' + tot;
+    });
+  }
+  function updateTocActive() {
+    Array.from(tocList.querySelectorAll('button')).forEach((btn) => {
+      const idx = Number(btn.dataset.index);
+      btn.classList.toggle('active', idx === i);
+    });
+  }
+  function buildToc() {
+    tocList.innerHTML = '';
+    slides.forEach((slide, idx) => {
+      const li = document.createElement('li');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.dataset.index = String(idx);
+      btn.textContent = 'Slide ' + (idx + 1) + ': ' + titleOf(slide, idx);
+      btn.onclick = () => {
+        show(idx);
+        closeToc();
+      };
+      li.appendChild(btn);
+      tocList.appendChild(li);
+    });
+    tocBuilt = true;
+  }
+  function openToc() {
+    if (!tocBuilt) buildToc();
+    tocPanel.hidden = false;
+    tocPanel.classList.add('open');
+    updateTocActive();
+  }
+  function closeToc() {
+    tocPanel.classList.remove('open');
+    tocPanel.hidden = true;
+  }
+  function show(n) {
+    i = Math.max(0, Math.min(tot - 1, n));
+    slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
+    document.getElementById('cur').textContent = String(i + 1);
+    updateCounters();
+    updateTocActive();
+    try { history.replaceState(null, '', '#' + (i + 1)); } catch (_) {}
+  }
+  function next() { show(i + 1); }
+  function prev() { show(i - 1); }
+  function first() { show(0); }
+  function last() { show(tot - 1); }
+
+  function currentFullscreenElement() {
+    return document.fullscreenElement || document.webkitFullscreenElement || null;
+  }
+  function requestFull() {
+    const target = deck || document.documentElement;
+    if (target.requestFullscreen) return target.requestFullscreen();
+    if (target.webkitRequestFullscreen) return target.webkitRequestFullscreen();
+    if (document.documentElement.requestFullscreen) return document.documentElement.requestFullscreen();
+    if (document.documentElement.webkitRequestFullscreen) return document.documentElement.webkitRequestFullscreen();
+    return null;
+  }
+  function exitFull() {
+    if (document.exitFullscreen) return document.exitFullscreen();
+    if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+    return null;
+  }
+  function toggleFullscreen() {
+    try {
+      const result = currentFullscreenElement() ? exitFull() : requestFull();
+      if (result && typeof result.catch === 'function') result.catch(() => {});
+    } catch (_) {}
+  }
+  function updateFullscreenScale() {
+    const fs = currentFullscreenElement();
+    if (!fs) {
+      document.documentElement.style.setProperty('--fs-scale', '1');
+      return;
+    }
+    const baseW = 1240;
+    const baseH = 697.5;
+    const scale = Math.min(window.innerWidth / baseW, window.innerHeight / baseH) * 0.98;
+    document.documentElement.style.setProperty('--fs-scale', String(Math.max(0.72, scale)));
+  }
+
+  document.getElementById('next').onclick = next;
+  document.getElementById('prev').onclick = prev;
+  document.getElementById('first').onclick = first;
+  document.getElementById('last').onclick = last;
+  document.getElementById('tocOpen').onclick = openToc;
+  document.getElementById('tocClose').onclick = closeToc;
+  document.getElementById('tocBackdrop').onclick = closeToc;
+  document.getElementById('fullscreen').onclick = toggleFullscreen;
+  document.addEventListener('fullscreenchange', updateFullscreenScale);
+  document.addEventListener('webkitfullscreenchange', updateFullscreenScale);
+  window.addEventListener('resize', updateFullscreenScale);
+  updateFullscreenScale();
+
+  document.addEventListener('keydown', (e) => {
+    if (tocPanel.classList.contains('open') && e.key === 'Escape') {
+      closeToc();
+      e.preventDefault();
+      return;
+    }
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { next(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { prev(); e.preventDefault(); }
+    else if (e.key === 'Home') first();
+    else if (e.key === 'End') last();
+    else if ((e.code === 'KeyF' || e.key === 'f' || e.key === 'F') && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      toggleFullscreen();
+      e.preventDefault();
+    }
+  });
+
+  const hashIndex = Number((location.hash || '#1').slice(1));
+  if (!Number.isNaN(hashIndex) && hashIndex >= 1) show(hashIndex - 1);
+  else show(0);
+</script>
+</body>
+</html>
