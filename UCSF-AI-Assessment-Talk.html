@@ -846,6 +846,17 @@
     align-items: center;
     gap: 6px;
   }
+  .light-detail summary .light.light-selectable {
+    cursor: pointer;
+    user-select: none;
+    border: 1px solid transparent;
+    transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
+  }
+  .light-detail summary .light.light-selectable.active {
+    border-color: rgba(39, 116, 174, .45);
+    background: rgba(39, 116, 174, .12);
+    box-shadow: 0 0 0 2px rgba(39, 116, 174, .12);
+  }
   .light-detail summary::-webkit-details-marker { display: none; }
   .light-detail .light-body {
     margin-top: 6px;
@@ -2420,6 +2431,94 @@
   document.getElementById('tot').textContent = tot;
   let i = 0;
   let tocBuilt = false;
+  function getLightColorFromChip(chip) {
+    if (!chip) return '';
+    if (chip.classList.contains('yellow')) return 'yellow';
+    if (chip.classList.contains('red')) return 'red';
+    if (chip.classList.contains('green')) return 'green';
+    return '';
+  }
+  function renderSelectedLightGuidance(body, color) {
+    if (!body) return;
+    const copy = {
+      yellow: {
+        allowed: 'AI is allowed for support work (planning, drafting help, debugging, editing) with disclosure.',
+        why: 'keeps workflow support while making student judgment visible.',
+        apply: "require an AI-use note (tool/version, prompts, accepted/rejected outputs) and grade the student's decisions."
+      },
+      red: {
+        allowed: 'AI generation is not allowed for the assessed response or live performance component.',
+        why: 'this segment is intended as direct evidence of independent student reasoning/performance.',
+        apply: 'add an explicit no-AI clause on that component and verify with oral defense/demo/checkpoint.'
+      },
+      green: {
+        allowed: 'AI use is allowed for exploration, ideation, and support tasks.',
+        why: 'the learning target is critique, reflection, or exploration rather than solo authorship.',
+        apply: "encourage experimentation, then require a short note on how AI support influenced the student's final choices."
+      }
+    };
+    const selected = copy[color];
+    if (!selected) return;
+    const label = color.charAt(0).toUpperCase() + color.slice(1);
+    body.innerHTML = [
+      '<p><strong>Allowed (' + label + '):</strong> ' + selected.allowed + '</p>',
+      '<p><strong>Why (' + label + '):</strong> ' + selected.why + '</p>',
+      '<p class="usage-note"><strong>How to apply:</strong> ' + selected.apply + '</p>'
+    ].join('');
+  }
+  function wireMixedLightSummaries() {
+    const detailsList = Array.from(document.querySelectorAll('.light-detail'));
+    detailsList.forEach((item) => {
+      const summary = item.querySelector('summary');
+      const body = item.querySelector('.light-body');
+      if (!summary || !body) return;
+      const chips = Array.from(summary.querySelectorAll('.light'));
+      const colors = [];
+      chips.forEach((chip) => {
+        const color = getLightColorFromChip(chip);
+        if (color && !colors.includes(color)) colors.push(color);
+      });
+      if (colors.length < 2) return;
+
+      const activate = (color) => {
+        if (!colors.includes(color)) return;
+        item.dataset.selectedLightColor = color;
+        chips.forEach((chip) => {
+          const chipColor = getLightColorFromChip(chip);
+          const isActive = chipColor === color;
+          if (chipColor) chip.classList.add('light-selectable');
+          chip.classList.toggle('active', isActive);
+          if (chipColor) chip.setAttribute('aria-pressed', String(isActive));
+        });
+        renderSelectedLightGuidance(body, color);
+        item.open = true;
+      };
+
+      const initial = colors.includes(item.dataset.selectedLightColor) ? item.dataset.selectedLightColor : colors[0];
+
+      chips.forEach((chip) => {
+        const color = getLightColorFromChip(chip);
+        if (!color) return;
+        chip.classList.add('light-selectable');
+        chip.setAttribute('role', 'button');
+        chip.setAttribute('tabindex', '0');
+        chip.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          activate(color);
+        });
+        chip.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            e.stopPropagation();
+            activate(color);
+          }
+        });
+      });
+
+      activate(initial);
+    });
+  }
   function appendLightGuidance() {
     const detailsList = Array.from(document.querySelectorAll('.light-detail'));
     detailsList.forEach((item) => {
@@ -2428,16 +2527,21 @@
       if (!body || !summary || body.querySelector('.usage-note')) return;
 
       const text = summary.textContent.toLowerCase();
+      const hasYellow = text.includes('yellow');
+      const hasRed = text.includes('red');
+      const hasGreen = text.includes('green');
+      const chipColors = Array.from(summary.querySelectorAll('.light'))
+        .map((chip) => getLightColorFromChip(chip))
+        .filter(Boolean);
+      const uniqueChipColors = Array.from(new Set(chipColors));
+      if (uniqueChipColors.length > 1) return;
+
       let guidance = '';
-      if (text.includes('yellow') && text.includes('red')) {
-        guidance = 'Use this as a staged rule: allow AI for planning/revision, then require an independent no-AI deliverable or defense for the graded outcome.';
-      } else if (text.includes('green') && text.includes('yellow')) {
-        guidance = 'Keep open AI exploration in Green components, but require disclosure and human justification in Yellow deliverables that are graded.';
-      } else if (text.includes('red')) {
+      if (hasRed) {
         guidance = 'State the boundary explicitly on the assignment sheet: no AI-generated text/code for the assessed response; keep this category for direct evidence of independent performance.';
-      } else if (text.includes('yellow')) {
+      } else if (hasYellow) {
         guidance = "Require a short AI-use statement (tool/version, prompts, accepted/rejected outputs) and grade the student's decisions, not tool output quality alone.";
-      } else if (text.includes('green')) {
+      } else if (hasGreen) {
         guidance = "Encourage experimentation, but require basic source-checking and a brief note on how AI support influenced the student's final choices.";
       }
       if (!guidance) return;
@@ -2450,6 +2554,7 @@
   }
   try {
     appendLightGuidance();
+    wireMixedLightSummaries();
   } catch (err) {
     console.error('Light guidance enhancement failed:', err);
   }
