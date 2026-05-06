@@ -836,6 +836,29 @@
     color: var(--ink-2);
   }
   .ai-detail .ai-body p:last-child { margin-bottom: 0; }
+  .light-detail {
+    margin: 0;
+  }
+  .light-detail summary {
+    cursor: pointer;
+    list-style: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .light-detail summary::-webkit-details-marker { display: none; }
+  .light-detail .light-body {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px dashed var(--line);
+  }
+  .light-detail .light-body p {
+    margin: 0 0 5px;
+    font-size: 12px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
+  .light-detail .light-body p:last-child { margin-bottom: 0; }
   .checklist-dropdown {
     list-style: none;
     padding: 0;
@@ -1928,7 +1951,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light yellow">Yellow</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light yellow">Yellow</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> AI is allowed for support tasks (e.g., brainstorming, debugging, editing) with disclosure.</p>
+              <p><strong>Why:</strong> keeps workflow support while preserving student-owned reasoning and decisions.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p1">1</span><span class="ptag p3">3</span></td>
       </tr>
       <tr>
@@ -1942,7 +1973,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light red">Red</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light red">Red</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> AI generation is not allowed for the assessed response.</p>
+              <p><strong>Why:</strong> this task is direct evidence of independent student performance.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p1">1</span></td>
       </tr>
       <tr>
@@ -1956,7 +1995,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light yellow">Yellow</span> + <span class="light red">Red</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> Yellow phases allow limited AI with disclosure; Red phases are no-AI.</p>
+              <p><strong>Why:</strong> supports preparation efficiency while protecting independent final reasoning.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p4">4</span><span class="ptag p1">1</span></td>
       </tr>
       <tr>
@@ -1970,7 +2017,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light green">Green</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light green">Green</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> AI use is allowed.</p>
+              <p><strong>Why:</strong> the learning target is critique, reflection, or exploration rather than solo authorship.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p3">3</span><span class="ptag p1">1</span></td>
       </tr>
     </tbody>
@@ -1997,7 +2052,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light yellow">Yellow</span> + <span class="light red">Red</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> Yellow phases allow limited AI with disclosure; Red phases are no-AI.</p>
+              <p><strong>Why:</strong> supports preparation efficiency while protecting independent final reasoning.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p1">1</span><span class="ptag p2">2</span></td>
       </tr>
       <tr>
@@ -2011,7 +2074,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light green">Green</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light green">Green</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> AI use is allowed.</p>
+              <p><strong>Why:</strong> the learning target is critique, reflection, or exploration rather than solo authorship.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p1">1</span><span class="ptag p3">3</span></td>
       </tr>
       <tr>
@@ -2025,7 +2096,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light yellow">Yellow</span> + <span class="light red">Red</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> Yellow phases allow limited AI with disclosure; Red phases are no-AI.</p>
+              <p><strong>Why:</strong> supports preparation efficiency while protecting independent final reasoning.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p4">4</span><span class="ptag p1">1</span></td>
       </tr>
       <tr>
@@ -2039,7 +2118,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light red">Red</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light red">Red</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> AI generation is not allowed for the assessed response.</p>
+              <p><strong>Why:</strong> this task is direct evidence of independent student performance.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p1">1</span></td>
       </tr>
     </tbody>
@@ -2066,7 +2153,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light yellow">Yellow</span> + <span class="light red">Red</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> Yellow phases allow limited AI with disclosure; Red phases are no-AI.</p>
+              <p><strong>Why:</strong> supports preparation efficiency while protecting independent final reasoning.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p3">3</span><span class="ptag p1">1</span></td>
       </tr>
       <tr>
@@ -2080,7 +2175,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light green">Green</span> + <span class="light yellow">Yellow</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light green">Green</span> + <span class="light yellow">Yellow</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> Green activities allow open AI use; Yellow deliverables allow limited AI with disclosure.</p>
+              <p><strong>Why:</strong> enables experimentation while keeping graded work transparent and attributable.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p3">3</span><span class="ptag p1">1</span></td>
       </tr>
       <tr>
@@ -2094,7 +2197,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light yellow">Yellow</span> + <span class="light red">Red</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light yellow">Yellow</span> + <span class="light red">Red</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> Yellow phases allow limited AI with disclosure; Red phases are no-AI.</p>
+              <p><strong>Why:</strong> supports preparation efficiency while protecting independent final reasoning.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p4">4</span><span class="ptag p1">1</span></td>
       </tr>
       <tr>
@@ -2108,7 +2219,15 @@
             </div>
           </details>
         </td>
-        <td><span class="light green">Green</span></td>
+        <td>
+          <details class="light-detail">
+            <summary><span class="light green">Green</span></summary>
+            <div class="light-body">
+              <p><strong>Allowed:</strong> AI use is allowed.</p>
+              <p><strong>Why:</strong> the learning target is critique, reflection, or exploration rather than solo authorship.</p>
+            </div>
+          </details>
+        </td>
         <td><span class="ptag p3">3</span></td>
       </tr>
     </tbody>
