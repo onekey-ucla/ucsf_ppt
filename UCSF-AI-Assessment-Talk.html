@@ -524,6 +524,41 @@
   .pillar-card.p4 .num { color: var(--p4); }
   .pillar-card h3 { color: var(--ink); margin: 6px 0 10px; font-size: 18px; }
   .pillar-card p { font-size: 14px; line-height: 1.5; margin: 0; }
+  .ak-overview .ak-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+    margin-bottom: 56px;
+  }
+  .ak-overview { padding-bottom: 122px; }
+  .ak-overview .ak-item {
+    background: var(--bg-soft);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 12px 14px;
+    min-height: 118px;
+  }
+  .ak-overview .ak-letter {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--p2);
+  }
+  .ak-overview .ak-topic {
+    margin: 6px 0 0;
+    font-size: 17px;
+    line-height: 1.25;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .ak-overview .ak-example {
+    margin: 6px 0 0;
+    font-size: 14px;
+    line-height: 1.35;
+    color: var(--ink-2);
+  }
   /* Pillar inline tag */
   .ptag {
     display: inline-block; padding: 2px 8px; border-radius: 6px;
@@ -1563,7 +1598,7 @@
     .slide h1 { font-size: 32px; }
     .slide h2 { font-size: 24px; }
     .slide p, .slide li { font-size: 16px; }
-    .pillar-grid, .three-col, .course-grid { grid-template-columns: 1fr 1fr; }
+    .pillar-grid, .three-col, .course-grid, .ak-overview .ak-grid { grid-template-columns: 1fr 1fr; }
     .two-col { grid-template-columns: 1fr; gap: 16px; }
     .agenda { gap: 8px; }
     .agenda li { grid-template-columns: 92px 1fr; padding: 10px 12px; }
@@ -1667,6 +1702,27 @@
         <li>GenAI can be trusted to be factually accurate.</li>
       </ul>
     </div>
+  </div>
+  <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
+</section>
+
+<!-- 4B. A-K ONE-GLANCE MAP -->
+<section class="slide ak-overview scrollable">
+  <div class="eyebrow">Section 1.5 · Origin</div>
+  <h1>All sections A-K at a glance</h1>
+  <p class="lede" style="margin-bottom:10px;">Quick map before detailed elaboration.</p>
+  <div class="ak-grid">
+    <div class="ak-item"><div class="ak-letter">A</div><p class="ak-topic">Literacy by task</p><p class="ak-example">Example: Can I tell when an AI bioinformatics answer makes biological sense?</p></div>
+    <div class="ak-item"><div class="ak-letter">B</div><p class="ak-topic">Tool use in BE</p><p class="ak-example">Example: Which AI tools are used for coding, analysis, or writing?</p></div>
+    <div class="ak-item"><div class="ak-letter">C</div><p class="ak-topic">Data and IP boundaries</p><p class="ak-example">Example: Can unpublished or human-subjects data be uploaded to AI tools?</p></div>
+    <div class="ak-item"><div class="ak-letter">D</div><p class="ak-topic">Learning impact</p><p class="ak-example">Example: Did AI improve understanding, not just speed?</p></div>
+    <div class="ak-item"><div class="ak-letter">E</div><p class="ak-topic">Training needs</p><p class="ak-example">Example: Where do students need instruction before using AI well?</p></div>
+    <div class="ak-item"><div class="ak-letter">F</div><p class="ak-topic">Access and equity</p><p class="ak-example">Example: Do cost, device, or internet limits block AI use?</p></div>
+    <div class="ak-item"><div class="ak-letter">G</div><p class="ak-topic">Policy clarity</p><p class="ak-example">Example: Are AI rules clear for each assignment?</p></div>
+    <div class="ak-item"><div class="ak-letter">H</div><p class="ak-topic">Support vs replace thinking</p><p class="ak-example">Example: Did AI support your reasoning or do the reasoning for you?</p></div>
+    <div class="ak-item"><div class="ak-letter">I</div><p class="ak-topic">Verification behavior</p><p class="ak-example">Example: Do you check AI output with another source?</p></div>
+    <div class="ak-item"><div class="ak-letter">J</div><p class="ak-topic">Documentation</p><p class="ak-example">Example: Do you record prompts, model version, and checks?</p></div>
+    <div class="ak-item"><div class="ak-letter">K</div><p class="ak-topic">Deskilling risk</p><p class="ak-example">Example: Has frequent AI use reduced confidence doing tasks alone?</p></div>
   </div>
   <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
 </section>
