@@ -492,8 +492,14 @@
     padding: 80px 88px;
     justify-content: space-between;
   }
-  .title-slide h1 { color: white; font-size: 54px; line-height: 1.05; max-width: 950px; }
-  .title-slide .meta { color: #cbd5e1; font-size: 18px; line-height: 1.6; }
+  .title-slide h1 { color: white; font-size: 54px; line-height: 1.05; max-width: 950px; margin: 0; }
+  .title-slide .eyebrow { color: #cbd5e1; }
+  .title-slide .meta {
+    color: #cbd5e1;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+  .title-slide .meta strong { color: white; }
   .title-slide .stripe {
     height: 8px; width: 160px; border-radius: 4px;
     background: linear-gradient(90deg, var(--p1), var(--p2), var(--p3), var(--p4));
@@ -1643,6 +1649,9 @@
     .agenda .sub { font-size: 13px; }
     .agenda-intro { font-size: 17px; }
     .slide.pillar-bullets .gap-drop[open] { max-height: 270px; }
+    .title-slide { padding: 56px 44px 62px; }
+    .title-slide h1 { font-size: 40px; }
+    .title-slide .meta { font-size: 16px; }
   }
 </style>
 </head>
@@ -1657,11 +1666,11 @@
 <section class="slide title-slide active">
   <div>
     <div class="stripe"></div>
-    <div class="eyebrow" style="color:#94a3b8;">11:05-11:25 · UCSF · Department of Epidemiology and Biostatistics · May 12, 2026</div>
+    <div class="eyebrow">11:05-11:25 · UCSF · Department of Epidemiology and Biostatistics · May 12, 2026</div>
     <h1>Designing and Rethinking Program and Course Assessments in the Era of AI</h1>
   </div>
   <div class="meta">
-    <strong style="color:white;">Wonki Lee, PhD</strong><br/>
+    <strong>Wonki Lee, PhD</strong><br/>
     UCLA Teaching and Learning Center
   </div>
 </section>
@@ -2526,30 +2535,30 @@
 <!-- 22. POLICY BY PILLAR -->
 <section class="slide">
   <div class="eyebrow">Section 5 · Course AI policy</div>
-  <h1>Drop-in syllabus language, organized by priority</h1>
+  <h1>Sample syllabus language by priority</h1>
   <div class="pillar-grid">
     <div class="pillar-card p1">
       <div class="num">Priority 1 · Awareness &amp; Literacy</div>
-      <h3>The traffic light + disclosure</h3>
-      <p>Every graded task is labeled Green, Yellow, or Red. Yellow tasks require an "AI-use statement" — tool, version, prompts, what was kept vs. rejected. AI is not an author.</p>
+      <h3>Permitted AI use by assignment</h3>
+      <p>Each assignment is labeled Green (AI permitted), Yellow (AI permitted with disclosure), or Red (AI not permitted for the assessed response). For Yellow assignments, students submit an AI-use disclosure listing tool, prompts, and substantive revisions.</p>
     </div>
     <div class="pillar-card p2">
       <div class="num">Priority 2 · Equitable Access</div>
-      <h3>No paid tools required</h3>
-      <p>Free-tier or UC-licensed tools suffice for every Yellow task. Students who choose not to use AI on Yellow tasks are not penalized — the rubric grades the deliverable, not the toolchain.</p>
+      <h3>Access and alternatives</h3>
+      <p>No assignment requires paid AI tools. Equivalent non-AI pathways are provided, and grading is based on learning outcomes rather than whether a student uses AI.</p>
     </div>
     <div class="pillar-card p3">
       <div class="num">Priority 3 · Innovation</div>
-      <h3>Use AI ambitiously on Green</h3>
-      <p>Green list is illustrative, not exhaustive. Policy is a <em>living document</em>; updates with one week's notice and a written change summary, informed by mid-quarter feedback.</p>
+      <h3>Instructional use and updates</h3>
+      <p>Approved examples of AI-supported work are provided in course materials. Any policy revisions are announced in writing at least one week before the affected deadline and apply prospectively.</p>
     </div>
     <div class="pillar-card p4">
       <div class="num">Priority 4 · Research</div>
-      <h3>Explicit data-handling clause</h3>
-      <p>No external upload of unpublished data, human-subjects data, partner IP, or NDA/IRB material. Reproducibility documentation is a required deliverable on all research artifacts.</p>
+      <h3>Data protection and documentation</h3>
+      <p>Students may not upload unpublished data, human-subject data, partner intellectual property, or NDA/IRB-restricted material to external AI services. Required assignments include AI-use documentation when AI assistance is permitted.</p>
     </div>
   </div>
-  <div class="callout" style="margin-top:18px;"><strong>Why this layout:</strong> the audience can read the survey-to-policy logic directly off the syllabus. Each clause exists because a survey item said it had to.</div>
+  <div class="callout" style="margin-top:18px;"><strong>Instructor note:</strong> adapt these clauses to local departmental policy, IRB requirements, and approved campus tools before publishing the final syllabus.</div>
   <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
 </section>
 
