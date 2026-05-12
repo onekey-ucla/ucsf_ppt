@@ -348,6 +348,29 @@
   }
   .nav button:hover { background: rgba(255,255,255,.15); }
   .nav .progress { font-variant-numeric: tabular-nums; opacity: .8; }
+  .overview-fab {
+    position: fixed;
+    right: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 12;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, .9);
+    color: #ffffff;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .25);
+    backdrop-filter: blur(8px);
+  }
+  .overview-fab:hover { background: rgba(15, 23, 42, 1); }
+  .overview-fab:focus-visible {
+    outline: 3px solid #93c5fd;
+    outline-offset: 2px;
+  }
   .toc-panel {
     position: fixed;
     inset: 0;
@@ -1596,7 +1619,8 @@
     bottom: auto;
   }
   body.a11y-mode .nav,
-  body.a11y-mode .toc-panel { display: none !important; }
+  body.a11y-mode .toc-panel,
+  body.a11y-mode .overview-fab { display: none !important; }
   .mode-switch {
     display: none;
     position: fixed;
@@ -1625,6 +1649,7 @@
   @media print {
     body { background: white; overflow: visible; }
     .nav { display: none; }
+    .overview-fab { display: none; }
     .deck { position: static; display: block; }
     .slide {
       display: flex !important;
@@ -1652,6 +1677,11 @@
     .title-slide { padding: 56px 44px 62px; }
     .title-slide h1 { font-size: 40px; }
     .title-slide .meta { font-size: 16px; }
+    .overview-fab {
+      right: 12px;
+      padding: 9px 12px;
+      font-size: 12px;
+    }
   }
 </style>
 </head>
@@ -2640,6 +2670,7 @@
   <button id="overview" title="Table of contents" aria-label="Open table of contents">▦</button>
   <button id="print" title="Print to PDF" aria-label="Print to PDF">⎙</button>
 </div>
+<button class="overview-fab" id="overviewFab" title="Open table of contents" aria-label="Open table of contents">Slides ▦</button>
 
 <div class="toc-panel" id="tocPanel" hidden>
   <div class="toc-backdrop" id="tocBackdrop"></div>
@@ -2663,6 +2694,7 @@
   const tocBackdrop = document.getElementById('tocBackdrop');
   const tocClose = document.getElementById('tocClose');
   const overviewBtn = document.getElementById('overview');
+  const overviewFab = document.getElementById('overviewFab');
   const a11yBtn = document.getElementById('a11y');
   const toOriginalLink = document.getElementById('toOriginalLink');
   document.getElementById('tot').textContent = tot;
@@ -3015,10 +3047,12 @@
   document.addEventListener('webkitfullscreenchange', updateFullscreenScale);
   window.addEventListener('resize', updateFullscreenScale);
   updateFullscreenScale();
-  overviewBtn.onclick = () => {
+  const toggleTocPanel = () => {
     if (tocPanel.classList.contains('open')) closeToc();
     else openToc();
   };
+  if (overviewBtn) overviewBtn.onclick = toggleTocPanel;
+  if (overviewFab) overviewFab.onclick = toggleTocPanel;
   tocBackdrop.onclick = closeToc;
   tocClose.onclick = closeToc;
   document.addEventListener('keydown', (e) => {
