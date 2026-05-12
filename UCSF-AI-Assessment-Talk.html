@@ -526,38 +526,73 @@
   .pillar-card p { font-size: 14px; line-height: 1.5; margin: 0; }
   .ak-overview .ak-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
     margin-top: 12px;
     margin-bottom: 20px;
+    align-items: start;
   }
   .ak-overview { padding-bottom: 92px; }
   .ak-overview .ak-item {
     background: var(--bg-soft);
     border: 1px solid var(--line);
     border-radius: 10px;
-    padding: 12px 14px;
-    min-height: 118px;
+    padding: 0;
+    min-height: 0;
+    overflow: hidden;
   }
+  .ak-overview .ak-drop summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 12px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .ak-overview .ak-drop summary::-webkit-details-marker { display: none; }
+  .ak-overview .ak-drop summary::after {
+    content: "▾";
+    margin-left: auto;
+    color: var(--muted);
+    transform: rotate(-90deg);
+    transition: transform .15s ease;
+  }
+  .ak-overview .ak-drop[open] summary::after { transform: rotate(0deg); }
+  .ak-overview .ak-drop[open] { grid-column: 1 / -1; }
+  .ak-overview .ak-drop[open] summary { padding-bottom: 10px; }
   .ak-overview .ak-letter {
     font-size: 14px;
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: var(--p2);
+    margin-top: 2px;
   }
   .ak-overview .ak-topic {
-    margin: 6px 0 0;
+    display: block;
+    margin: 0;
     font-size: 17px;
     line-height: 1.25;
     color: var(--ink);
     font-weight: 600;
   }
   .ak-overview .ak-example {
-    margin: 6px 0 0;
-    font-size: 14px;
+    margin: 0;
+    padding: 10px 14px 12px;
+    border-top: 1px solid var(--line);
+    font-size: 13px;
     line-height: 1.35;
     color: var(--ink-2);
+  }
+  .ak-overview .ak-example ul {
+    margin: 0;
+    padding-left: 16px;
+  }
+  .ak-overview .ak-example li {
+    margin: 0 0 4px;
+  }
+  .ak-overview .ak-example li:last-child {
+    margin-bottom: 0;
   }
   /* Pillar inline tag */
   .ptag {
@@ -1598,7 +1633,8 @@
     .slide h1 { font-size: 32px; }
     .slide h2 { font-size: 24px; }
     .slide p, .slide li { font-size: 16px; }
-    .pillar-grid, .three-col, .course-grid, .ak-overview .ak-grid { grid-template-columns: 1fr 1fr; }
+    .pillar-grid, .three-col, .course-grid { grid-template-columns: 1fr 1fr; }
+    .ak-overview .ak-grid { grid-template-columns: 1fr; }
     .two-col { grid-template-columns: 1fr; gap: 16px; }
     .agenda { gap: 8px; }
     .agenda li { grid-template-columns: 92px 1fr; padding: 10px 12px; }
@@ -1710,14 +1746,68 @@
 <section class="slide ak-overview">
   <div class="eyebrow">Section 1.5 · Origin</div>
   <h1>All sections A-K at a glance (A-F)</h1>
-  <p class="lede" style="margin-bottom:10px;">Quick map before detailed elaboration.</p>
+  <p class="lede" style="margin-bottom:10px;">Quick map before detailed elaboration. Click a section to view the specific example.</p>
   <div class="ak-grid">
-    <div class="ak-item"><div class="ak-letter">A</div><p class="ak-topic">Literacy by task</p><p class="ak-example">Example: Can I tell when an AI bioinformatics answer makes biological sense?</p></div>
-    <div class="ak-item"><div class="ak-letter">B</div><p class="ak-topic">Tool use in BE</p><p class="ak-example">Example: Which AI tools are used for coding, analysis, or writing?</p></div>
-    <div class="ak-item"><div class="ak-letter">C</div><p class="ak-topic">Data and IP boundaries</p><p class="ak-example">Example: Can unpublished or human-subjects data be uploaded to AI tools?</p></div>
-    <div class="ak-item"><div class="ak-letter">D</div><p class="ak-topic">Learning impact</p><p class="ak-example">Example: Did AI improve understanding, not just speed?</p></div>
-    <div class="ak-item"><div class="ak-letter">E</div><p class="ak-topic">Training needs</p><p class="ak-example">Example: Where do students need instruction before using AI well?</p></div>
-    <div class="ak-item"><div class="ak-letter">F</div><p class="ak-topic">Access and equity</p><p class="ak-example">Example: Do cost, device, or internet limits block AI use?</p></div>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">A</span><span class="ak-topic">Literacy by task</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Can I tell when an AI bioinformatics answer makes biological sense?</li>
+          <li>Rate confidence interpreting AI outputs in your BE tasks (1 low - 5 high).</li>
+          <li>How often do you spot AI errors before submission? (1 never - 5 always).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">B</span><span class="ak-topic">Tool use in BE</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Which AI tools are used for coding, analysis, or writing?</li>
+          <li>Weekly use by task type (0 none, 1 once, 2 monthly, 3 weekly, 4 daily).</li>
+          <li>Perceived usefulness by task (1 not useful - 5 very useful).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">C</span><span class="ak-topic">Data and IP boundaries</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Can unpublished or human-subjects data be uploaded to AI tools?</li>
+          <li>Clarity of data-sharing boundaries in your courses (1 unclear - 5 very clear).</li>
+          <li>Confidence identifying restricted content (1 low - 5 high).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">D</span><span class="ak-topic">Learning impact</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Did AI improve understanding, not just speed?</li>
+          <li>Impact on concept mastery in BE courses (1 worse - 5 much better).</li>
+          <li>Impact on assignment quality (1 lower - 5 higher).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">E</span><span class="ak-topic">Training needs</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Where do students need instruction before using AI well?</li>
+          <li>Preparedness for prompt writing, verification, and citation (1 low - 5 high).</li>
+          <li>Urgency for more training resources (1 none - 5 urgent).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">F</span><span class="ak-topic">Access and equity</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Do cost, device, or internet limits block AI use?</li>
+          <li>How often access barriers affect coursework (1 never - 5 very often).</li>
+          <li>Perceived equity of AI access across peers (1 inequitable - 5 equitable).</li>
+        </ul>
+      </div>
+    </details>
   </div>
   <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
 </section>
@@ -1726,13 +1816,58 @@
 <section class="slide ak-overview">
   <div class="eyebrow">Section 1.5 · Origin</div>
   <h1>All sections A-K at a glance (G-K)</h1>
-  <p class="lede" style="margin-bottom:10px;">Quick map before detailed elaboration.</p>
+  <p class="lede" style="margin-bottom:10px;">Quick map before detailed elaboration. Click a section to view the specific example.</p>
   <div class="ak-grid">
-    <div class="ak-item"><div class="ak-letter">G</div><p class="ak-topic">Policy clarity</p><p class="ak-example">Example: Are AI rules clear for each assignment?</p></div>
-    <div class="ak-item"><div class="ak-letter">H</div><p class="ak-topic">Support vs replace thinking</p><p class="ak-example">Example: Did AI support your reasoning or do the reasoning for you?</p></div>
-    <div class="ak-item"><div class="ak-letter">I</div><p class="ak-topic">Verification behavior</p><p class="ak-example">Example: Do you check AI output with another source?</p></div>
-    <div class="ak-item"><div class="ak-letter">J</div><p class="ak-topic">Documentation</p><p class="ak-example">Example: Do you record prompts, model version, and checks?</p></div>
-    <div class="ak-item"><div class="ak-letter">K</div><p class="ak-topic">Deskilling risk</p><p class="ak-example">Example: Has frequent AI use reduced confidence doing tasks alone?</p></div>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">G</span><span class="ak-topic">Policy clarity</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Are AI rules clear for each assignment?</li>
+          <li>Clarity of course AI policy statements (1 unclear - 5 very clear).</li>
+          <li>Consistency of policy messaging across courses (1 inconsistent - 5 consistent).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">H</span><span class="ak-topic">Support vs replace thinking</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Did AI support your reasoning or do the reasoning for you?</li>
+          <li>How often AI replaced your own thinking (1 never - 5 very often).</li>
+          <li>How often AI helped deepen your thinking (1 never - 5 very often).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">I</span><span class="ak-topic">Verification behavior</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Do you check AI output with another source?</li>
+          <li>Frequency of fact-checking AI output (1 never - 5 always).</li>
+          <li>Frequency of rerunning checks/replication before submission (1 never - 5 always).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">J</span><span class="ak-topic">Documentation</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Do you record prompts, model version, and checks?</li>
+          <li>Completeness of AI-use records in assignments (1 incomplete - 5 complete).</li>
+          <li>Frequency of citing AI support when required (1 never - 5 always).</li>
+        </ul>
+      </div>
+    </details>
+    <details class="ak-item ak-drop">
+      <summary><span class="ak-letter">K</span><span class="ak-topic">Deskilling risk</span></summary>
+      <div class="ak-example">
+        <ul>
+          <li>Has frequent AI use reduced confidence doing tasks alone?</li>
+          <li>Perceived decline in independent problem-solving (1 none - 5 major).</li>
+          <li>Confidence performing key tasks without AI (1 low - 5 high).</li>
+        </ul>
+      </div>
+    </details>
   </div>
   <div class="footer"><span>Wonki Lee — UCLA EASI</span><span class="counter"></span></div>
 </section>
