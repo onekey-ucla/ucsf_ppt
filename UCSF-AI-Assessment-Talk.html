@@ -348,6 +348,14 @@
   }
   .nav button:hover { background: rgba(255,255,255,.15); }
   .nav .progress { font-variant-numeric: tabular-nums; opacity: .8; }
+  body.lite-mode .ak-example ul li:nth-child(n+2) { display: none; }
+  body.lite-mode .gap-row ul li:nth-child(n+3) { display: none; }
+  body.lite-mode .scenario-card ul li:nth-child(n+3) { display: none; }
+  body.lite-mode .ai-body p:nth-child(n+2) { display: none; }
+  body.lite-mode .light-body .usage-note { display: none; }
+  body.lite-mode .light-body p:nth-child(n+2) { display: none; }
+  body.lite-mode .gap-explain { display: none; }
+  body.lite-mode .check-answer p:nth-child(n+2) { display: none; }
   .overview-fab {
     position: fixed;
     right: 22px;
@@ -2687,6 +2695,7 @@
   const slides = Array.from(document.querySelectorAll('.slide'));
   const tot = slides.length;
   const isTlcMode = false;
+  const isLiteMode = new URLSearchParams(location.search).get('lite') === '1';
   const isA11yMode = new URLSearchParams(location.search).get('accessible') === '1';
   const footerLabel = 'UCLA Teaching and Learning Center';
   const tocPanel = document.getElementById('tocPanel');
@@ -2821,12 +2830,31 @@
       body.appendChild(p);
     });
   }
+  function applyLiteMode() {
+    document.body.classList.add('lite-mode');
+    const trimItems = (list, keep) => {
+      if (!list) return;
+      const items = Array.from(list.children).filter((el) => el.tagName === 'LI');
+      items.forEach((item, idx) => {
+        if (idx >= keep) item.remove();
+      });
+    };
+    const titleEyebrow = document.querySelector('.title-slide .eyebrow');
+    if (titleEyebrow && !titleEyebrow.textContent.toLowerCase().includes('lite')) {
+      titleEyebrow.textContent += ' · Lite';
+    }
+    document.querySelectorAll('.ak-example ul').forEach((ul) => trimItems(ul, 1));
+    document.querySelectorAll('.gap-row ul').forEach((ul) => trimItems(ul, 2));
+    document.querySelectorAll('.scenario-card ul').forEach((ul) => trimItems(ul, 2));
+    document.querySelectorAll('details').forEach((item) => { item.open = false; });
+  }
   try {
     appendLightGuidance();
     wireMixedLightSummaries();
   } catch (err) {
     console.error('Light guidance enhancement failed:', err);
   }
+  if (isLiteMode) applyLiteMode();
   if (isTlcMode) {
     document.body.classList.add('tlc-mode');
     const tlcLayouts = ['tlc-layout-bottom', 'tlc-layout-right', 'tlc-layout-top', 'tlc-layout-left'];
